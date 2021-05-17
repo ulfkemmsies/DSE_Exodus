@@ -31,15 +31,19 @@ class Crosssection:
         self.top_small_sector = 0.5 * (self.r)**2 *(m.pi/4)
         # print("Top Small Sector:", self.top_small_sector)
 
-        self.bottom_small_triangle = 0.5 * ((self.r-self.d)-(m.sqrt(2)*0.5*self.r))**2
-        # print("Bottom Small Triangle:", self.bottom_small_triangle)
+        if (self.r - self.d) > (m.sqrt(2)/2)*self.r: 
+            self.bottom_small_triangle = 0.5 * ((self.r-self.d)-(m.sqrt(2)*0.5*self.r))**2
+            # print("Bottom Small Triangle:", self.bottom_small_triangle)
 
-        x1 = (self.r)*(m.sin(m.acos((self.r-self.d)/self.r)))
-        # print("First Integration Limit:",x1)
-        x2 = (m.sqrt(2)/2)*self.r
-        # print("Second Integration Limit:",x2)
-        self.bottom_zone = abs((integrate.quad(lambda x: (self.r-self.d)-m.sqrt((self.r)**2 -x**2), x1, x2))[0])
-        # print("Small Bottom Zone:", self.bottom_zone)
+            x1 = (self.r)*(m.sin(m.acos((self.r-self.d)/self.r)))
+            # print("First Integration Limit:",x1)
+            x2 = (m.sqrt(2)/2)*self.r
+            # print("Second Integration Limit:",x2)
+            self.bottom_zone = abs((integrate.quad(lambda x: (self.r-self.d)-m.sqrt((self.r)**2 -x**2), x1, x2))[0])
+            # print("Small Bottom Zone:", self.bottom_zone)
+        else:
+            self.bottom_small_triangle = 0
+            self.bottom_zone = 0
 
     def total_area(self):
         self.calculate_areas()
