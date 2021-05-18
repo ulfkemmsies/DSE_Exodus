@@ -3,13 +3,14 @@ import scipy as sp
 import math as m
 from area_calc import Crosssection
 from commondata import CommonData
-
+import unittest
+from area_calc import truncate
 
 class Structure():
 
     def __init__(self,r,d) -> None:
         
-        self.habitat_length = 30
+        self.habitat_length = 27
         self.data = CommonData()
         self.habitat_radius = r
         self.floor_depth = d
@@ -55,6 +56,32 @@ class Structure():
         print("Radiation Attenuation:",self.data.attenuation_needed)
 
 
+class StructuralTests(unittest.TestCase):
+
+    def setUp(self):
+        self.Struct = Structure(3,1)
+        self.Struct.total_calc()
+
+    def test_regolith_thickness(self):
+        self.assertEqual(truncate(self.Struct.regolith_thickness,2), 0.82)
+    
+    def test_regolith_volume(self):
+        self.assertEqual(truncate(self.Struct.regolith_total_volume,2), )
+
+    def test_regolith_mass(self):
+        self.assertEqual(truncate(self.Struct.regolith_total_mass,2), )
+
+    def test_regolith_external_pressure(self):
+        self.assertEqual(truncate(self.Struct.external_pressure,2), )
+
+    def test_kevlar_thickness(self):
+        self.assertEqual(truncate(self.Struct.kevlar_thickness,2), )
+
+    def test_kevlar_volume(self):
+        self.assertEqual(truncate(self.Struct.kevlar_total_volume,2), )
+
 if __name__ == "__main__":    
     test = Structure(3,1)
     test.total_calc()
+
+    

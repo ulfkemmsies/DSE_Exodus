@@ -26,4 +26,4 @@ class CommonData():
         self.kevlar_dose_reduction = 5.5 #% per g/cm2
         self.kevlar_thermal_conductivity = 0.04 #W/mK
         self.kevlar_density = 1.47 #kg/m3
-        self.kevlar_safety_factor = 1.5 
+        self.kevlar_safety_factor = 4 
