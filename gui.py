@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from commondata import CommonData
 import tkinter.messagebox
+import tkinter.font as tkFont
 
 class Application(Frame):
     def __init__(self, master=None):
@@ -17,6 +18,18 @@ class Application(Frame):
 
         self.create_tabs()
         self.bind_all('<<NotebookTabChanged>>', lambda e: self.focus(e))
+        # self.bind("<Control-z>", self.undo)
+        # self.bind("<Control-y>", self.redo)
+
+        # configure style
+        self.style = ttk.Style(self)
+        self.style.configure("Treeview.Heading", font="bold")
+
+        default_font = tkFont.nametofont("TkDefaultFont")
+        default_font.configure(family="Helvetica")
+        self.option_add("*Font", default_font)
+
+
 
     def create_tabs(self, new_tab=None, new_subtab=None, subtabonly=False):
 
@@ -108,13 +121,20 @@ class Application(Frame):
         self.current_Treeview.column("Value", anchor='center', stretch=True)
         self.current_Treeview.column("Unit", anchor='center', stretch=True)
 
-
-        self.current_Treeview.heading("Parameter", text="Parameter")
+        self.current_Treeview.heading("Parameter", text="Parameter", )
         self.current_Treeview.heading("Value", text="Value")
         self.current_Treeview.heading("Unit", text="Unit")
 
+        # self.current_Treeview.grid(row = 0, column = 0, sticky='we')
+        # globals()[f"{subtab_name}_subtab"].grid_columnconfigure(0, weight=1)
 
-        self.current_Treeview.pack(side=LEFT, fill=BOTH)
+        self.current_Treeview.pack(side="left", fill="both", expand=True)
+
+        # Constructing vertical scrollbar with treeview
+        self.verscrlbar = ttk.Scrollbar(self.table_frame, orient ="vertical", command = self.current_Treeview.yview)
+        self.verscrlbar.pack(side ='right', fill ='x')
+        self.current_Treeview.configure(xscrollcommand = self.verscrlbar.set)
+
 
         for i in range(len(self.current_params)):
             self.current_Treeview.insert('', i, values=(self.current_params[i], self.current_values[i],self.current_units[i]))
@@ -127,18 +147,27 @@ class Application(Frame):
                 tv.move(k, '', index)
                 tv.heading(col, command=lambda: treeview_sort_column(tv, col, not reverse))
 
+        for col in columns:
+            self.current_Treeview.heading(col, text=col, command=lambda _col=col: treeview_sort_column(self.current_Treeview, _col, False))
+
 
         def newrow():
                         
             top= Toplevel(self)
+            top.focus_force()
 
             new_param = StringVar()
             new_val = StringVar()
             new_unit = StringVar()
 
-            param_entry = Entry(top,  textvariable=new_param, width=25).grid(row=1,column=0, padx=5, pady=5)
-            val_entry= Entry(top, textvariable=new_val, width= 25).grid(row=1,column=1, padx=(5,5), pady=5)
-            unit_entry= Entry(top, textvariable=new_unit, width= 25).grid(row=1,column=2, padx=5, pady=5)
+            param_entry = Entry(top,  textvariable=new_param, width=25)
+            param_entry.grid(row=1,column=0, padx=5, pady=5)
+
+            val_entry= Entry(top, textvariable=new_val, width= 25)
+            val_entry.grid(row=1,column=1, padx=(5,5), pady=5)
+
+            unit_entry= Entry(top, textvariable=new_unit, width= 25)
+            unit_entry.grid(row=1,column=2, padx=5, pady=5)
             
             param_label = Label(top, text="Parameter:").grid(row=0,column=0, padx=5, pady=5)
             var_label = Label(top, text="Value:").grid(row=0,column=1, padx=(5,5), pady=5)
@@ -152,12 +181,15 @@ class Application(Frame):
                 elif (new_param.get()) and (new_val.get()) and (new_unit.get()):
                     self.datahandler.add_row(tab_name, subtab_name, self.datahandler.reverse_name_cleaner(new_param.get()), new_val.get(), new_unit.get())
                     top.destroy()
-                    print(self.datahandler.param_getter(tab_name,subtab_name))
+                    # print(self.datahandler.param_getter(tab_name,subtab_name))
                     self.current_Treeview.destroy()
+                    self.verscrlbar.destroy()
                     self.create_param_table(tab_name, subtab_name)
 
+            param_entry.focus_set()
+
         newb = ttk.Button(self.table_frame, text='New Parameter', width=20, command=newrow)
-        newb.place(x=420, y=(len(self.current_params) - 1) * 20 + 45)
+        newb.place(relx=0.5, y=(len(self.current_params) - 1) * 20 + 65, anchor=CENTER)
 
     def set_cell_value(self, event):
         for item in self.current_Treeview.selection():
@@ -167,29 +199,24 @@ class Application(Frame):
 
         self.cn = int(str(self.id_column).replace('#', ''))
         self.rn = int(str(self.id_row).replace('I', ''))
-
-        self.pre = list(self.current_Treeview.item(self.id_row, 'values'))[0]
-
-
         
-        self.entryedit = Text(self.table_frame, width=25, height=1)
-        self.entryedit.place(x= 10 + (self.cn - 1) * 300, y=6 + self.rn * 20)
-
+        param = list(self.current_Treeview.item(self.id_row, 'values'))[0]
+        
+        self.entryedit = Text(self.table_frame, width=int(self.current_Treeview.winfo_width()/27), height=1)
+        self.entryedit.place(x= self.current_Treeview.winfo_width()/54 + (self.cn - 1) * self.current_Treeview.winfo_width()/3, y=6 + self.rn * 20)
+        
         def saveedit():
             self.current_Treeview.set(item, column=self.id_column, value=self.entryedit.get(0.0, "end"))
+
+            row = self.datahandler.df.index[(self.datahandler.df['object']==self.current_table_subtab) & (self.datahandler.df['param']==param)].tolist()[0]
+            newval = self.entryedit.get(0.0, "end")
+            self.datahandler.df.iloc[row, (self.cn + 1)] = newval
 
             self.entryedit.destroy()
             self.okb.destroy()
 
         self.okb = ttk.Button(self.table_frame, text='OK', width=4, command=saveedit)
-        self.okb.place(x=265 + (self.cn - 1) * 300, y=2 + self.rn * 20)
-
-
-        
-        
-
-        # for col in columns:
-        #     self.current_Treeview.heading(col, text=col, command=lambda _col=col: treeview_sort_column(self.current_Treeview, _col, False))
+        self.okb.place(x=(self.current_Treeview.winfo_width()/3)*0.9 + (self.cn - 1) * self.current_Treeview.winfo_width()/3, y=2 + self.rn * 20)
 
     def name_cleaner(self,entry):
         out = entry.replace("_", " ")
@@ -207,10 +234,11 @@ class Application(Frame):
 
                 if hasattr(self, 'current_Treeview'):
                     self.current_Treeview.destroy()
+                    self.verscrlbar.destroy()
 
                 self.create_param_table(tab_name, subtab_name)
 
-                print(widget.tab(widget.select(), "text"), "has focus")
+                # print(widget.tab(widget.select(), "text"), "has focus")
 
     def make_top_menu(self):
         self.menubar = Menu(self)
@@ -304,6 +332,37 @@ class Application(Frame):
             
         else :
             tkinter.messagebox.showinfo('Return', 'Returning to main application\n(why waste my time like this?)')
+
+    # def undo(self, event=None):
+    #     if self.steps != 0:
+    #         self.steps -= 1
+    #         self.delete(0, END)
+    #         self.insert(END, self.changes[self.steps])
+
+    #         if hasattr(self, 'current_Treeview'):
+    #             self.current_Treeview.destroy()
+
+    #         self.create_param_table(self.current_table_tab, self.current_table_subtab)
+
+    # def redo(self, event=None):
+    #     if self.steps < len(self.changes):
+    #         self.delete(0, END)
+    #         self.insert(END, self.changes[self.steps])
+    #         self.steps += 1
+
+    #         if hasattr(self, 'current_Treeview'):
+    #             self.current_Treeview.destroy()
+
+    #         self.create_param_table(self.current_table_tab, self.current_table_subtab)
+
+    # def add_changes(self, event=None):
+    #     if self.get() != self.changes[-1]:
+    #         self.changes.append(self.get())
+    #         self.steps += 1
+
+
+
+
 #________________________________________
 root = Tk()
 app = Application(master=root)
