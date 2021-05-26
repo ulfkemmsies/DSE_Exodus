@@ -4,7 +4,18 @@ Created on Tue May 18 15:43:41 2021
 
 @author: Lian Greijn
 """
-import math as math
+#from DSE_Exodus.commondata import CommonData
+import math as m
+import numpy as np
+'''
+class Robots():
+    def __init__(self, time):
+        self.data = CommonData()
+        self.excavation_time = time
+    
+    def truetime_Collecting(self):
+        self.true_time = self.excavation_time - (2*self.distance_hab2exc*)
+'''
 
 #Calculations for RASSOR
 mras = 66
@@ -18,7 +29,7 @@ Dcol = 100      #Number of days spent collecting
 Ntrips = 10     #Number of trips to excavation site
 Dcoltrue = Dcol - (2*D2es*Vras*Ntrips)  #Last part can be removed in case of hopper at excavation site
 Nras = Mreq/(Crt*Dcol)
-Nrasround = math.ceil(Nras) #Number of required RASSOR robots to complete task
+Nrasround = m.ceil(Nras) #Number of required RASSOR robots to complete task
 
 
 #Calculations for ATHLETE
@@ -38,7 +49,7 @@ Speed unknown, number of cargo units unknown
 
 
 Nath = ((Dl2h/Vath)*N2h + (Dl2p/Vath)*N2p)/(Ddriv*24*3600)
-Nathround = math.ceil(Nath)
+Nathround = m.ceil(Nath)
 
 
 mtotrob = Nathround*mathl + mras*Nrasround #Total weight of the robots
