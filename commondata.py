@@ -51,5 +51,24 @@ class CommonData():
         values = list(self.df.value.values)
 
         for i in range(len(objects)):
-            attr_name = f"{objects[i]}_{params[i]}"
+            attr_name = f"{objects[i]}/{params[i]}"
             setattr(self, attr_name, values[i])
+
+    def attributes_to_df(self):
+        keys = list(self.__dict__.keys())
+        filtered = list(filter(lambda item: item not in ['df', 'tab_names', 'subtabs'] ,keys))
+
+        for key in filtered:
+
+            value = getattr(self, key)
+            key = key.split("/")
+            object = key[0]
+            param = key[1]
+
+            row = self.df.index[(self.df['object']==object) & (self.df['param']==param)].tolist()[0]
+            self.df.at[row, 'object'] = object
+            self.df.at[row, 'param'] = param
+
+    def code_finisher(self):
+        self.attributes_to_df()
+        self.df_to_csv('data.csv')

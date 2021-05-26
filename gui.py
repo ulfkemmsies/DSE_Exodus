@@ -94,16 +94,19 @@ class Application(Frame):
         self.current_params = list(self.current_df.param.values)
         self.current_units = list(self.current_df.units.values)
         self.current_values = list(self.current_df.value.values)
+        self.current_table_tab = tab_name
+        self.current_table_subtab = subtab_name
 
         self.table_frame = globals()[f"{subtab_name}_subtab"]
 
         columns = ("Parameter", "Value", "Unit")
 
         self.current_Treeview = ttk.Treeview(self.table_frame, height=18, show="headings", columns=columns)  # 
-        
-        self.current_Treeview.column("Parameter", anchor='center')
-        self.current_Treeview.column("Value", anchor='center')
-        self.current_Treeview.column("Unit", anchor='center')
+        self.current_Treeview.bind('<Double-1>', self.set_cell_value)
+
+        self.current_Treeview.column("Parameter", anchor='center', stretch=True)
+        self.current_Treeview.column("Value", anchor='center', stretch=True)
+        self.current_Treeview.column("Unit", anchor='center', stretch=True)
 
 
         self.current_Treeview.heading("Parameter", text="Parameter")
@@ -123,26 +126,6 @@ class Application(Frame):
             for index, (val, k) in enumerate(l):
                 tv.move(k, '', index)
                 tv.heading(col, command=lambda: treeview_sort_column(tv, col, not reverse))
-
-
-    # def set_cell_value(self, event):
-    #     for item in self.current_Treeview.selection():
-    #         item_text = self.current_Treeview.item(item, "values")
-    #         self.id_column = self.current_Treeview.identify_column(event.x)
-    #         self.id_row = self.current_Treeview.identify_row(event.y)
-    #     self.cn = int(str(self.id_column).replace('#', ''))
-    #     self.rn = int(str(self.id_row).replace('I', ''))
-        
-    #     self.entryedit = Text(self.table_frame, width=25, height=1)
-    #     self.entryedit.place(x= 10 + (cn - 1) * 300, y=6 + rn * 20)
-
-    #     def saveedit(self):
-    #         self.current_Treeview.set(item, column=self.id_column, value=self.entryedit.get(0.0, "end"))
-    #         self.entryedit.destroy()
-    #         self.okb.destroy()
-
-    #     self.okb = ttk.Button(self.table_frame, text='OK', width=4, command=self.saveedit)
-    #     self.okb.place(x=265 + (self.cn - 1) * 300, y=2 + self.rn * 20)
 
 
         def newrow():
@@ -173,12 +156,40 @@ class Application(Frame):
                     self.current_Treeview.destroy()
                     self.create_param_table(tab_name, subtab_name)
 
-        # self.current_Treeview.bind('<Double-1>', self.set_cell_value)
         newb = ttk.Button(self.table_frame, text='New Parameter', width=20, command=newrow)
         newb.place(x=420, y=(len(self.current_params) - 1) * 20 + 45)
 
-        for col in columns:
-            self.current_Treeview.heading(col, text=col, command=lambda _col=col: treeview_sort_column(self.current_Treeview, _col, False))
+    def set_cell_value(self, event):
+        for item in self.current_Treeview.selection():
+
+            self.id_column = self.current_Treeview.identify_column(event.x)
+            self.id_row = self.current_Treeview.identify_row(event.y)
+
+        self.cn = int(str(self.id_column).replace('#', ''))
+        self.rn = int(str(self.id_row).replace('I', ''))
+
+        self.pre = list(self.current_Treeview.item(self.id_row, 'values'))[0]
+
+
+        
+        self.entryedit = Text(self.table_frame, width=25, height=1)
+        self.entryedit.place(x= 10 + (self.cn - 1) * 300, y=6 + self.rn * 20)
+
+        def saveedit():
+            self.current_Treeview.set(item, column=self.id_column, value=self.entryedit.get(0.0, "end"))
+
+            self.entryedit.destroy()
+            self.okb.destroy()
+
+        self.okb = ttk.Button(self.table_frame, text='OK', width=4, command=saveedit)
+        self.okb.place(x=265 + (self.cn - 1) * 300, y=2 + self.rn * 20)
+
+
+        
+        
+
+        # for col in columns:
+        #     self.current_Treeview.heading(col, text=col, command=lambda _col=col: treeview_sort_column(self.current_Treeview, _col, False))
 
     def name_cleaner(self,entry):
         out = entry.replace("_", " ")
