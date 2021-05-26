@@ -9,3 +9,4 @@ materials,twaron,density,1470.0,kg/m3
 logistics,rassor,mass,66.0,kg
 materials,aluminum,density,2810.0,kg/m3
 materials,regolith,porosity,45,%
+general,moon,solar_constant,1361,W/m2
