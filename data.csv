@@ -8,5 +8,27 @@ general,launch_system,max_payload_mass,100000.0,kg
 materials,twaron,density,1470.0,kg/m3
 logistics,rassor,mass,66.0,kg
 materials,aluminum,density,2810.0,kg/m3
-materials,regolith,porosity,45,%
-general,moon,solar_constant,1361,W/m2
+materials,regolith,porosity,45.0,%
+general,moon,solar_constant,1361.0,W/m2
+general,habitat,radiation_attenuation_needed,0.99,%
+materials,regolith,cohesion,2.35,-
+materials,regolith,bearing_capacity,31.0,-
+materials,regolith,thermal_conductivity,1.0,-
+materials,regolith,specific_area,0.9,-
+materials,regolith,radiation_dose_reduction,0.8,% per cm/2
+materials,kevlar,youngs_modulus,179.0,GPa
+materials,kevlar,ultimate_tensile_strength,3450.0,MPa
+materials,kevlar,breaking_tenacity,3000.0,MPa
+materials,kevlar,radiation_dose_reduction,5.5,% per cm/2
+materials,kevlar,thermal_conductivity,0.04,W/mK
+materials,kevlar,density,1470.0,kg/m3
+general,habitat,structural_safety_factor,4.0,-
+general,habitat,length,27.0,m
+general,habitat,internal_pressure,101325.0,Pa
+general,habitat,radius,6.0,m
+general,habitat,floor_depth,1.0,m
+materials,regolith,thickness,0.825,m
+materials,regolith,total_volume,2168.811,m3
+materials,regolith,total_mass,3253216.608,kg
+materials,kevlar,thickness,0.0,m
+materials,kevlar,total_mass,949.233,kg

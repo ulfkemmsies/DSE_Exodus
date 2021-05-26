@@ -1,7 +1,7 @@
 import pandas as pd
 from csv import writer
 import csv
-
+from area_calc import truncate
 
 class CommonData():
 
@@ -11,6 +11,8 @@ class CommonData():
         self.read_csv('data.csv')
         self.df_tab_organizer()
         self.csv_to_attributes()
+
+        print(list(filter(lambda item: item not in ['df', 'tab_names', 'subtabs'] , list(self.__dict__.keys()))))
 
     def read_csv(self, file_name):
         self.df = pd.read_csv(file_name)
@@ -32,7 +34,7 @@ class CommonData():
         return filtered
 
     def add_row(self, tab_name, subtab_name, param, value, unit):
-        new_row = {'group':tab_name, 'object':subtab_name, 'param':param, 'value':value, 'units':unit}
+        new_row = {'group':tab_name, 'object':subtab_name, 'param':param, 'value':float(value), 'units':unit}
         self.df = self.df.append(new_row, ignore_index=True)
 
     def get_tab_from_subtab(self, subtab_name):
@@ -51,24 +53,33 @@ class CommonData():
         values = list(self.df.value.values)
 
         for i in range(len(objects)):
-            attr_name = f"{objects[i]}/{params[i]}"
+            attr_name = f"{objects[i]}__{params[i]}"
             setattr(self, attr_name, values[i])
 
     def attributes_to_df(self):
         keys = list(self.__dict__.keys())
-        filtered = list(filter(lambda item: item not in ['df', 'tab_names', 'subtabs'] ,keys))
+        filtered = list(filter(lambda item: item not in ['df', 'tab_names', 'subtabs', 'missing_keys'] ,keys))
+        self.missing_keys = []
 
         for key in filtered:
 
             value = getattr(self, key)
-            key = key.split("/")
+            key = key.split("__")
             object = key[0]
             param = key[1]
 
-            row = self.df.index[(self.df['object']==object) & (self.df['param']==param)].tolist()[0]
-            self.df.at[row, 'object'] = object
-            self.df.at[row, 'param'] = param
+            if self.df.loc[(self.df['object']==object) & (self.df['param']==param)].size > 0:
+                row = self.df.index[(self.df['object']==object) & (self.df['param']==param)].tolist()[0]
+                self.df.iat[row, 3] = truncate(value, decimals=3)
+
+            else:
+                self.missing_keys.append(key)
+        
+        if len(self.missing_keys) > 0:
+            print("Missing following parameters in csv:\n", *self.missing_keys)
 
     def code_finisher(self):
         self.attributes_to_df()
-        self.df_to_csv('data.csv')
+        if len(self.missing_keys) == 0:
+            print("All keys found! Writing results to csv.")
+            self.df_to_csv('data.csv')
