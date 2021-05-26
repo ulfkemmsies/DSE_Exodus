@@ -167,7 +167,7 @@ class Application(Frame):
                 if (not new_param.get()) or (not new_val.get()) or (not new_unit.get()):
                     tkinter.messagebox.showinfo("Warning!", "You forgot one of the inputs, you dingus.")
                 elif (new_param.get()) and (new_val.get()) and (new_unit.get()):
-                    self.datahandler.add_row(tab_name, subtab_name, new_param.get(), new_val.get(), new_unit.get())
+                    self.datahandler.add_row(tab_name, subtab_name, self.datahandler.reverse_name_cleaner(new_param.get()), new_val.get(), new_unit.get())
                     top.destroy()
                     print(self.datahandler.param_getter(tab_name,subtab_name))
                     self.current_Treeview.destroy()
