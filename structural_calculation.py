@@ -32,7 +32,7 @@ class Structure():
         self.kevlar_thickness = self.data.kevlar_safety_factor * self.internal_pressure * self.habitat_radius / (self.data.kevlar_breaking_tenacity *10**(6)) #m
 
     def kevlar_mass_calc(self):
-        self.kevlar_total_volume = self.habitat_radius * 2 * m.pi * self.kevlar_thickness + self.kevlar_thickness * (m.pi)**2 * 0.5
+        self.kevlar_total_volume = (self.habitat_radius * 2 * m.pi * self.kevlar_thickness)*(self.habitat_length-self.habitat_radius) + (self.kevlar_thickness * (m.pi)**2 * 0.5)
         self.kevlar_total_mass = self.kevlar_total_volume * self.data.kevlar_density
         self.kevlar_launch_cost = self.kevlar_total_mass * self.data.launch_cost
 

@@ -1,0 +1,7 @@
+group,object,param,value,units,text_name
+general,launch_system,launch_cost,250000.0,$/kg,
+general,moon,moon_gravity,1.625,g,
+materials,regolith,density,1500.0,kg/m3,
+materials,regolith,specific_heat,800.0,W/kgK,
+general,launch_system,payload_volume,1100.0,m3,
+general,launch_system,max_payload_mass,100000,kg,
