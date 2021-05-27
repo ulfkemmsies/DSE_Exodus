@@ -15,6 +15,7 @@ class Robots():
     
     def truetime_Collecting(self):
         self.true_time = self.excavation_time - (2*self.distance_hab2exc*)
+        print(Result)
 '''
 
 #Calculations for RASSOR
