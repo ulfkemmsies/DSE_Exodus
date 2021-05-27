@@ -5,7 +5,6 @@ import tkinter.messagebox
 import tkinter.font as tkFont
 from structural_calculation import Structure
 
-
 class Application(Frame):
     def __init__(self, master=None):
         super().__init__(master)
