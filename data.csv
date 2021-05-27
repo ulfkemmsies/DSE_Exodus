@@ -25,7 +25,7 @@ materials,kevlar,density,1470.0,kg/m3
 general,habitat,structural_safety_factor,4.0,-
 general,habitat,length,27.0,m
 general,habitat,internal_pressure,101325.0,Pa
-general,habitat,radius,6.0,m
+general,habitat,radius,3.0,m
 general,habitat,floor_depth,1.0,m
 materials,regolith,thickness,0.825,m
 materials,regolith,total_volume,2168.811,m3

@@ -13,7 +13,7 @@ class Structure():
         
         self.data = CommonData()
         self.total_calc()
-        self.data.code_finisher()
+        self.data.attributes_to_df()
 
     def thickness_distributor(self):
         self.data.regolith__thickness = (self.data.habitat__radiation_attenuation_needed / ((self.data.regolith__radiation_dose_reduction/100) * (self.data.regolith__density /1000)))/100 #m

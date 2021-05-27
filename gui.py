@@ -3,6 +3,8 @@ from tkinter import ttk
 from commondata import CommonData
 import tkinter.messagebox
 import tkinter.font as tkFont
+from structural_calculation import Structure
+
 
 class Application(Frame):
     def __init__(self, master=None):
@@ -251,6 +253,7 @@ class Application(Frame):
         self.tabmenu.add_command(label='New Object', command=self.make_new_subtab)
 
         self.menubar.add_command(label="Save to disk", command=self.save_to_disk)
+        # self.menubar.add_command(label="Structural Calculation", command=self.run_structure())
 
     def make_new_tab(self):
         top= Toplevel(self)
@@ -332,6 +335,18 @@ class Application(Frame):
             
         else :
             tkinter.messagebox.showinfo('Return', 'Returning to main application\n(why waste my time like this?)')
+
+    # def run_structure(self):
+    #     Structure()
+    #     if self.current_Treeview 
+
+    # def destroy_table(self):
+    #     self.current_Treeview.destroy()
+    #     self.verscrlbar.destroy()
+
+    # def refresh_table(self):
+    #     self.destroy_table()
+    #     self.create_param_table()
 
     # def undo(self, event=None):
     #     if self.steps != 0:
