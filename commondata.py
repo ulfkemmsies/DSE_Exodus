@@ -2,6 +2,7 @@ import pandas as pd
 from csv import writer
 import csv
 from area_calc import truncate
+import os
 
 class CommonData():
 
@@ -15,7 +16,9 @@ class CommonData():
         print(list(filter(lambda item: item not in ['df', 'tab_names', 'subtabs'] , list(self.__dict__.keys()))))
 
     def read_csv(self, file_name):
-        self.df = pd.read_csv(file_name)
+        dir_path = os.getcwd()
+        csv_path = dir_path+"\\data.csv"
+        self.df = pd.read_csv(csv_path)
 
     def append_to_df(self, new_row):
         self.df = self.df.append(new_row, ignore_index=True)
