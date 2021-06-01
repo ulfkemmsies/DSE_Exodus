@@ -11,13 +11,17 @@ from commondata import CommonData
 
 class Robots():
     def __init__(self):
+        #Importing the commondata file
         self.data = CommonData()
-        print(self.data.rassor__capacity)
 
-        #place holders required
+        #Just as a reminder to me:
+        # print(self.data.rassor__capacity) Dont forget!
+
+        #place holder values required
         self.bagsize = 40 # [L] bagsize 
         self.underneathhabitat = 83.7*self.data.regolith__density #[m3] volume under habitat
-
+        self.number_of_trips_2habitat = 25
+        #Running the actual calculation
         self.total_calc()
 
     #Calculations for the rassor
@@ -35,10 +39,18 @@ class Robots():
         self.cranes_needed = m.ceil((self.data.crane__operating_speed * self.bag_number_required)/(time))
         print("number of cranes needed", self.cranes_needed)
 
+    #Calculations Transporter
+    def transporter_calculations(self, time):
+        self.transport_time_total = self.data.athlete__distance/self.data.athlete__velocity
+        self.transporters_needed = m.ceil(self.transport_time_total/time)
+        print("Number of tranpsorters required", self.transporters_needed)
+        
+    #To run all calculations, fill in the brackets for the time required: add all defs here
     def total_calc(self):
         self.rassor_amount_under_habitat(100)
         self.rassor_amount_at_excavationloc(200)
         self.crane_calculations(100)
+        self.transporter_calculations(100)
 
-    #Calculations Transporter
+    
 Test = Robots()
