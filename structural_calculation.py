@@ -9,11 +9,16 @@ from area_calc import truncate
 
 class Structure():
 
-    def __init__(self) -> None:
+    def __init__(self, Datahandler=None) -> None:
         
-        self.data = CommonData()
+        if Datahandler == None:
+            self.data = CommonData()
+        else:
+            self.data = Datahandler
+            
         self.total_calc()
         self.data.attributes_to_df()
+        # self.data.code_finisher()
 
     def thickness_distributor(self):
         self.data.regolith__thickness = (self.data.habitat__radiation_attenuation_needed / ((self.data.regolith__radiation_dose_reduction/100) * (self.data.regolith__density /1000)))/100 #m
@@ -40,18 +45,18 @@ class Structure():
         self.pressure_calc()
         self.kevlar_mass_calc()
 
-        print("Habitat Radius [m]:",self.data.habitat__radius)
-        print("Habitat Length [m]:",self.data.habitat__length)
-        print("Floor Depth [m]:",self.data.habitat__floor_depth)
-        print("Regolith Volume [m3]:",self.data.regolith__total_volume)
-        print("Regolith Mass [kg]:",self.data.regolith__total_mass)
-        print("Regolith Thickness [m]:",self.data.regolith__thickness)
-        print("Kevlar Mass [kg]:",self.data.kevlar__total_mass)
-        print("Kevlar Thickness [mm]:",self.data.kevlar__thickness*1000)
-        print("Kevlar Launch Cost [$]:",self.kevlar_launch_cost)
-        print("Highest Pressure [Pa]:",self.data.habitat__internal_pressure)
-        print("Lowest Pressure [Pa]:",self.gauge_pressure)
-        print("Radiation Attenuation:",self.data.habitat__radiation_attenuation_needed)
+        # print("Habitat Radius [m]:",self.data.habitat__radius)
+        # print("Habitat Length [m]:",self.data.habitat__length)
+        # print("Floor Depth [m]:",self.data.habitat__floor_depth)
+        # print("Regolith Volume [m3]:",self.data.regolith__total_volume)
+        # print("Regolith Mass [kg]:",self.data.regolith__total_mass)
+        # print("Regolith Thickness [m]:",self.data.regolith__thickness)
+        # print("Kevlar Mass [kg]:",self.data.kevlar__total_mass)
+        # print("Kevlar Thickness [mm]:",self.data.kevlar__thickness*1000)
+        # print("Kevlar Launch Cost [$]:",self.kevlar_launch_cost)
+        # print("Highest Pressure [Pa]:",self.data.habitat__internal_pressure)
+        # print("Lowest Pressure [Pa]:",self.gauge_pressure)
+        # print("Radiation Attenuation:",self.data.habitat__radiation_attenuation_needed)
 
 
 class StructuralTests(unittest.TestCase):

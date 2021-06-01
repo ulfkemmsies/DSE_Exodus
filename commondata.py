@@ -13,7 +13,7 @@ class CommonData():
         self.df_tab_organizer()
         self.csv_to_attributes()
 
-        print(list(filter(lambda item: item not in ['df', 'tab_names', 'subtabs'] , list(self.__dict__.keys()))))
+        # print(list(filter(lambda item: item not in ['df', 'tab_names', 'subtabs'] , list(self.__dict__.keys()))))
 
     def read_csv(self, file_name):
         dir_path = os.getcwd()
