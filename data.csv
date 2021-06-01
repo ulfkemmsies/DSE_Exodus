@@ -28,10 +28,10 @@ general,habitat,internal_pressure,101325.0,Pa
 general,habitat,radius,3.0,m
 general,habitat,floor_depth,1.0,m
 materials,regolith,thickness,0.825,m
-materials,regolith,total_volume,2168.811,m3
-materials,regolith,total_mass,3253216.608,kg
+materials,regolith,total_volume,679.725,m3
+materials,regolith,total_mass,1019588.454,kg
 materials,kevlar,thickness,0.0,m
-materials,kevlar,total_mass,949.233,kg
-general,constants,stefan_boltzmann_constant,5.670374419e-08,W/(m^2*K^4)
-general,constants,gas_constant,8.31446261815324,J/(K*mol)
-general,constants,gravitational_constant,6.6743015e-11,m^3/(kg*s^2)
+materials,kevlar,total_mass,272.469,kg
+general,constants,stefan_boltzmann_constant,0.0,W/(m^2*K^4)
+general,constants,gas_constant,8.314,J/(K*mol)
+general,constants,gravitational_constant,0.0,m^3/(kg*s^2)

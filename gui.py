@@ -30,8 +30,6 @@ class Application(Frame):
         default_font.configure(family="Helvetica")
         self.option_add("*Font", default_font)
 
-
-
     def create_tabs(self, new_tab=None, new_subtab=None, subtabonly=False):
 
         if new_tab==None and new_subtab==None and subtabonly==False:
@@ -101,7 +99,6 @@ class Application(Frame):
             globals()[f"{tab_name}_tab"].destroy()
 
         self.tabs.destroy()        
-
 
     def create_param_table(self, tab_name, subtab_name):
         self.current_df = self.datahandler.param_getter(tab_name, subtab_name)
@@ -210,11 +207,17 @@ class Application(Frame):
             self.current_Treeview.set(item, column=self.id_column, value=self.entryedit.get(0.0, "end"))
 
             row = self.datahandler.df.index[(self.datahandler.df['object']==self.current_table_subtab) & (self.datahandler.df['param']==param)].tolist()[0]
-            newval = self.entryedit.get(0.0, "end")
+            newval = str(self.entryedit.get(0.0, "end")).replace("\n","")
+            if self.cn + 1 == 3:
+                newval = float(newval)
             self.datahandler.df.iloc[row, (self.cn + 1)] = newval
 
             self.entryedit.destroy()
             self.okb.destroy()
+            self.current_Treeview.destroy()
+            self.verscrlbar.destroy()
+            self.create_param_table(self.current_table_tab, self.current_table_subtab)
+
 
         self.okb = ttk.Button(self.table_frame, text='OK', width=4, command=saveedit)
         self.okb.place(x=(self.current_Treeview.winfo_width()/3)*0.9 + (self.cn - 1) * self.current_Treeview.winfo_width()/3, y=2 + self.rn * 20)
@@ -252,7 +255,7 @@ class Application(Frame):
         self.tabmenu.add_command(label='New Object', command=self.make_new_subtab)
 
         self.menubar.add_command(label="Save to disk", command=self.save_to_disk)
-        # self.menubar.add_command(label="Structural Calculation", command=self.run_structure())
+        self.menubar.add_command(label="Structural Calculation", command=self.run_structure)
 
     def make_new_tab(self):
         top= Toplevel(self)
@@ -335,9 +338,14 @@ class Application(Frame):
         else :
             tkinter.messagebox.showinfo('Return', 'Returning to main application\n(why waste my time like this?)')
 
-    # def run_structure(self):
-    #     Structure()
-    #     if self.current_Treeview 
+    def run_structure(self):
+        if self.current_Treeview:
+            print(self.datahandler)
+            Structure(self.datahandler)
+            print(self.datahandler.df)
+            self.current_Treeview.destroy()
+            self.verscrlbar.destroy()
+            self.create_param_table(self.current_table_tab, self.current_table_subtab)
 
     # def destroy_table(self):
     #     self.current_Treeview.destroy()
