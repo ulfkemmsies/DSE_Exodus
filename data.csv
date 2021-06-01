@@ -51,3 +51,7 @@ general,moon,black_body_temp,270.4,K
 general,moon,topographic_range,13.0,km
 general,moon,lunar_moi,0.394,I/MR2
 general,moon,j2,0.0002027,-
+logistics,rassor,velocity,1.5,m/s
+logistics,rassor,capacity,2700.0,kg/day
+logistics,athlete,mass,2340.0,kg
+logistics,athlete,velocity,2.5,m/s
