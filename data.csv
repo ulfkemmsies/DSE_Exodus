@@ -35,7 +35,7 @@ materials,kevlar,total_mass,272.469,kg
 general,constants,stefan_boltzmann_constant,0.0,W/(m^2*K^4)
 general,constants,gas_constant,8.314,J/(K*mol)
 general,constants,gravitational_constant,0.0,m^3/(kg*s^2)
-materials,kevlar,total_mass,949.2330000000001,kg
+materials,kevlar,total_mass,949.233,kg
 general,constants,stefan_boltzmann_constant,5.670374419e-08,W/(m^2*K^4)
 general,constants,gas_constant,8.314462618153241,J/(K*mol)
 general,constants,gravitational_constant,6.6743015e-11,m^3/(kg*s^2)
@@ -53,8 +53,8 @@ general,moon,geometric_albedo,0.12,-
 general,moon,vband_magnitude,-0.08,-
 general,moon,black_body_temp,270.4,K
 general,moon,topographic_range,13.0,km
-general,moon,lunar_moi,0.39399999999999996,I/MR2
-general,moon,j2,0.00020269999999999997,-
+general,moon,lunar_moi,0.3939999999999999,I/MR2
+general,moon,j2,0.0002026999999999,-
 logistics,rassor,velocity,1.5,m/s
 logistics,rassor,capacity,2700.0,kg/day
 logistics,athlete,mass,2340.0,kg
@@ -63,3 +63,4 @@ logistics,crane,mass,169.0,kg
 logistics,crane,operating_speed,60.0,s
 logistics,athlete,distance,2000.0,m
 logistics,crane,volume,0.85,m3
+logistics,athlete,volume,1.8,m3
