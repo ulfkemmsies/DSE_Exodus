@@ -56,3 +56,4 @@ class Robots():
 
     
 Test = Robots()
+Test.excavation_time_underneath()
