@@ -41,16 +41,17 @@ class Robots():
 
     #Calculations Transporter
     def transporter_calculations(self, time):
-        self.transport_time_total = self.data.athlete__distance/self.data.athlete__velocity
+        self.transport_time_total = (self.data.athlete__distance/self.data.athlete__velocity)/(60*60) #divide to get days instead of seconds
         self.transporters_needed = m.ceil(self.transport_time_total/time)
-        print("Number of tranpsorters required", self.transporters_needed)
+        print("Number of transporters required", self.transporters_needed)
         
     #To run all calculations, fill in the brackets for the time required: add all defs here
     def total_calc(self):
         self.rassor_amount_under_habitat(100)
         self.rassor_amount_at_excavationloc(200)
         self.crane_calculations(100)
-        self.transporter_calculations(100)
+        self.transporter_calculations(1)
 
     
 Test = Robots()
+
