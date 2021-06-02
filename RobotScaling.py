@@ -15,7 +15,6 @@ underneathhabitat = 83.7    #[m3] volume under habitat
 class Robots():
     def __init__(self):
         self.data = CommonData()
-        print(self.data.rassor__capacity)
 
     def excavation_time_underneath(self):
         print(self.data.rassor__capacity)
@@ -23,3 +22,4 @@ class Robots():
 
     
 Test = Robots()
+Test.excavation_time_underneath()
