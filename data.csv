@@ -60,5 +60,9 @@ logistics,rassor,capacity,2700.0,kg/day
 logistics,athlete,mass,2340.0,kg
 logistics,athlete,velocity,0.83,m/s
 logistics,crane,mass,169.0,kg
-logistics,crane,operating_speed,60.0,s
+logistics,crane,operating_speed,180.0,s
 logistics,athlete,distance,2000.0,m
+materials,bags,length,1.7,m
+materials,bags,width,0.6,m
+materials,bags,height,0.15,m
+materials,bags,volume_bag,0.153,m^3
