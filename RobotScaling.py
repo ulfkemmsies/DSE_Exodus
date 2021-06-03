@@ -38,22 +38,22 @@ class Robots():
     #Calculations Crane
     def crane_calculations(self, time):
         self.bag_number_required = (self.data.regolith__total_volume*1000) / self.bagsize
-        self.cranes_needed = m.ceil((self.data.crane__operating_speed * self.bag_number_required)/(time*16*3600))
+        self.cranes_needed = m.ceil((self.data.crane__operating_speed * self.bag_number_required)/(time*16*3600))*()
         print("number of cranes needed", self.cranes_needed)
 
     #Calculations Transporter
     def transporter_calculations(self, time):
         self.transport_time_total = (self.data.athlete__distance/self.data.athlete__velocity)*self.number_of_trips_2habitat*2
-        self.transporters_needed = m.ceil(self.transport_time_total/(time*(24*3600)))
+        self.transporters_needed = m.ceil(self.transport_time_total/(time*(16*3600)))
         print("Number of tranpsorters required", self.transporters_needed)
 
     #To run all calculations, fill in the brackets for the time required: add all defs here
     def total_calc(self):
         self.rassor_amount_under_habitat(60)
         self.rassor_amount_at_excavationloc(330)
-        self.crane_calculations(60)
+        self.crane_calculations(350)
         self.transporter_calculations(10)
 
     
 Test = Robots()
-# Test.excavation_time_underneath()
+Test.excavation_time_underneath()
