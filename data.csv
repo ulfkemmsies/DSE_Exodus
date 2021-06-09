@@ -73,7 +73,7 @@ financials,ebp,production_cost,1.0,$/kg
 financials,mbp,leo_cost,3000.0,$/kg
 financials,mbp,eml1_cost,1000.0,$/kg
 financials,mbp,ls_cost,500.0,$/kg
-financials,ebp,leo_cost,100.0,$/kg
+financials,ebp,leo_cost,4000.0,$/kg
 financials,ebp,eml1_cost,12000.0,$/kg
 financials,ebp,ls_cost,36000.0,$/kg
 general,launch_system,annual_cost_decrease,0.05,factor

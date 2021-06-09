@@ -7,7 +7,16 @@ from scipy import stats
 import matplotlib.pyplot as plt
 from commondata import CommonData
 import unittest
+from bisect import bisect_left
+import time
 
+class discrete_cdf:
+    def __init__(self, data):
+        self._data = data # must be sorted
+        self._data_len = float(len(data))
+
+    def __call__(self, point):
+        return (len(self._data[:bisect_left(self._data, point)]) / self._data_len)
 
 class NPV():
 
@@ -16,9 +25,7 @@ class NPV():
         self.data = CommonData()
         self.create_distros()
         self.assign_vars()
-        # self.print_distro(self.ebp_leo_cost_distro, trials=self.trials)
-        # self.print_all_distros(trials)
-        self.create_case_array()
+        self.get_NPV_distros()
 
     def create_distros(self):
         self.init_hab_investment_distro = stats.lognorm(s=0.3, loc=self.data.habitat__init_investment/2, scale=self.data.habitat__init_investment)
@@ -98,21 +105,30 @@ class NPV():
         self.mbp_eml1_cost = 2 * self.mbp_production_cost
         self.mbp_annual_cost_decrease = self.trunc_sample(self.mbp_annual_cost_decrease_distro)
 
-    def print_distro(self, distro, trials, min=None, max=None, title=None):
-        r = self.trunc_sample(distro=distro, trials=trials, min=min, max=max)
-        Q25 = np.percentile(np.sort(r), 25, interpolation = 'midpoint')
-        Q75 = np.percentile(np.sort(r), 75, interpolation = 'midpoint')
-        mean = np.sort(r).mean()
-        std = np.sort(r).std()
-        neg = distro.cdf(0).round(5)
-        stdcdf = (distro.cdf(mean+std).round(3) - distro.cdf(mean-std).round(3)).round(3)
-        stdcdf2 = (distro.cdf(mean+2*std).round(3) - distro.cdf(mean-2*std).round(3)).round(3)
+    def print_distro(self, trials, distro=None, min=None, max=None, title=None, in_arr=None):
+        if in_arr == None:
+            r = self.trunc_sample(distro=distro, trials=trials, min=min, max=max)
+        else:
+            r = in_arr
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
-        ax.hist(r, density=True, histtype='stepfilled', alpha=0.4, bins=20)
-        ax.plot(np.sort(r), distro.pdf(np.sort(r)), label=f"negative cdf:{neg}")
+        Q25 = np.percentile(np.sort(r), 25, interpolation = 'midpoint')
+        Q75 = np.percentile(np.sort(r), 75, interpolation = 'midpoint')
+        mean = np.sort(r).mean()
+        std = np.sort(r).std()
+
+        if distro != None:
+            neg = distro.cdf(0).round(5)
+            stdcdf = (distro.cdf(mean+std).round(3) - distro.cdf(mean-std).round(3)).round(3)
+            stdcdf2 = (distro.cdf(mean+2*std).round(3) - distro.cdf(mean-2*std).round(3)).round(3)
+
+            ax.plot(np.sort(r), distro.pdf(np.sort(r)), label=f"negative cdf:{neg}")
+            plt.text(mean, distro.pdf(mean), f"{mean.round(2)}")
+
+
+        ax.hist(r, density=True, histtype='stepfilled', alpha=0.5, bins=30)
 
         ax.axvline(x=Q25, color="green", ls='--', alpha=0.4, label="27/75 percentiles")
         ax.axvline(x=Q75, color="green", ls='--', alpha=0.4)
@@ -125,15 +141,23 @@ class NPV():
 
         ax.axvline(x=mean, color="black", ls='--', alpha=0.4, label="mean")
 
-        plt.text(mean, distro.pdf(mean), f"{mean.round(2)}")
+        if distro == None and in_arr != None:
+            cdf = discrete_cdf(np.sort(r))
+            cdf_vals = [cdf(point) for point in np.sort(r)]
+            neg = cdf(0)
+            billionyearlycost = cdf(-1000000000)
+            ax2 = ax.twinx()
+            ax2.plot(np.sort(r), cdf_vals, label=f"Probability of negative NPV:{neg}\nProbability of +1 billion costs per year: {billionyearlycost}")
+
+
         plt.grid(True, which='both', color='black', linestyle="--", linewidth=0.5, alpha=0.2)
         plt.minorticks_on()
         plt.title(f"{title}\n")
         plt.tight_layout()
 
         plt.legend()
-        plt.savefig(fname=f"distro_plots/{title}.jpeg")
-        # plt.show()
+        # plt.savefig(fname=f"distro_plots/{title}.jpeg")
+        plt.show()
 
         plt.close(fig)
     
@@ -146,7 +170,7 @@ class NPV():
 
             distro = getattr(self, key)
             if type(distro) == stats.distributions.rv_frozen:
-                self.print_distro(distro, trials, title=str(key))
+                self.print_distro(trials, distro, title=str(key))
 
     def trunc_sample(self, distro, min=None, max=None, trials=1):
         rv = distro.rvs(size=trials)
@@ -218,9 +242,9 @@ class NPV():
         ebp_eml1_cost = np.apply_along_axis(lambda n: self.ebp_eml1_cost * (1-self.leo_annual_launch_cost_decrease)**n, 0, year_index_0)
         ebp_lunar_surface_cost = np.apply_along_axis(lambda n: self.ebp_ls_cost * (1-self.leo_annual_launch_cost_decrease)**n, 0, year_index_0)
 
-        discounted_ebp_leo_cost = self.discount_rate * ebp_leo_cost
-        discounted_ebp_eml1_cost = self.discount_rate * ebp_eml1_cost
-        discounted_ebp_lunar_surface_cost = self.discount_rate * ebp_lunar_surface_cost
+        discounted_ebp_leo_cost = self.market_undercut * ebp_leo_cost
+        discounted_ebp_eml1_cost = self.market_undercut * ebp_eml1_cost
+        discounted_ebp_lunar_surface_cost = self.market_undercut * ebp_lunar_surface_cost
 
         mbp_leo_cost = np.apply_along_axis(lambda n: self.mbp_leo_cost * (1-self.LS_annual_launch_cost_decrease)**n, 0, year_index_0)
         mbp_leo_cost_aerobraking = np.apply_along_axis(lambda n: self.mbp_leo_cost_aerobraking * (1-self.LS_annual_launch_cost_decrease)**n, 0, year_index_0)
@@ -255,17 +279,31 @@ class NPV():
         total_NPV = yearly_NPV.sum() - self.init_hab_investment
         total_NPV_aerobraking  = yearly_NPV_aerobraking.sum() - self.init_hab_investment
 
-        print(self.ebp_leo_cost)
-        print(discounted_ebp_leo_cost-self.mbp_leo_cost)
-        print(discounted_ebp_leo_cost)
-        print(self.mbp_leo_cost)
-        print(LEO_revenue)
-        # print(NPV_discount_factor)
-        # print(yearly_cash_flow_aerobraking)
-        # print(yearly_NPV_aerobraking)
+        return total_NPV, total_NPV_aerobraking
+
+    def get_NPV_distros(self):
+        NPVs = []
+        NPVs_aerobraking = []
+
+        t0 = time.time()
+
+        for i in range(self.trials):
+            self.assign_vars()
+            NPV_res, NPV_aero_res = self.create_case_array()
+
+            NPVs.append(NPV_res)
+            NPVs_aerobraking.append(NPV_aero_res)
+
+            print(f"Successfully calculated {i}-th NPV!")
+
+        print(time.time() - t0, "seconds wall time")
+
+        self.print_distro(trials=self.trials, title="NPV Distribution", in_arr=NPVs)
+        self.print_distro(trials=self.trials, title="NPV Distribution\nAerobraking", in_arr=NPVs_aerobraking)
+        
 
 
 
 
 if __name__ == "__main__":
-    test = NPV(50000)
+    test = NPV(5000)
