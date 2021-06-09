@@ -56,4 +56,6 @@ class Robots():
 
     
 Test = Robots()
-Test.excavation_time_underneath()
+# Test.excavation_time_underneath()
+
+print(Test.bagsize)
