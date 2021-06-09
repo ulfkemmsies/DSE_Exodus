@@ -49,7 +49,7 @@ class Application(Frame):
                     globals()[f"{tab_name}_subtab_notebook"] = ttk.Notebook(globals()[f"{tab_name}_tab"])
 
                     for subtab_name in self.datahandler.subtabs:
-                        
+                        print(subtab_name)
                         globals()[f"{subtab_name}_subtab"] = ttk.Frame(globals()[f"{tab_name}_subtab_notebook"])
                         globals()[f"{tab_name}_subtab_notebook"].add(globals()[f"{subtab_name}_subtab"], text=self.name_cleaner(subtab_name))
                         globals()[f"{tab_name}_subtab_notebook"].pack(expand=1, fill="both")

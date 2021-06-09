@@ -64,7 +64,6 @@ logistics,crane,operating_speed,60.0,s
 logistics,athlete,distance,2000.0,m
 logistics,crane,volume,0.85,m3
 logistics,athlete,volume,1.8,m3
-<<<<<<< HEAD
 financials,leo,init_demand,510.0,MT/yr
 financials,eml1,init_demand,552.0,MT/year
 financials,lunar_surface,init_demand,44.0,MT/yr
@@ -97,7 +96,6 @@ financials,prop_mine,resupply_payload,800.0,kg
 general,habitat,init_investment,1000000000.0,$
 financials,prop_mine,discount_rate,0.3,factor
 general,habitat,total_mass,100000.0,kg
-=======
 power,solar,cell_area,30.18,cm2
 power,solar,average_cell_weight,118.0,mg/cm2
 power,solar,cell_opencircuit_voltage_bol,2690.0,mV
@@ -112,4 +110,3 @@ power,solar,cell_gradient_v_oc_bol,-6.2,mV/K
 power,solar,cell_gradient_i_sc_bol,0.36,mA/K
 power,solar,cell_gradient_v_mp_bol,-6.7,mV/K
 power,solar,cell_gradient_i_mp_bol,0.24,mA/K
->>>>>>> 
