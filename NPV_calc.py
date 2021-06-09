@@ -47,7 +47,7 @@ class NPV():
         self.equity_percent_distro = stats.uniform()
         self.init_market_share_distro = stats.uniform(loc=0.5, scale=0.5)
         self.market_share_change_distro = stats.norm(loc=self.data.prop_mine__market_share_change_rate, scale=0.05*self.data.prop_mine__market_share_change_rate)
-        self.discount_rate_distro = stats.norm(loc=self.data.prop_mine__discount_rate, scale=0.75*self.data.prop_mine__discount_rate)
+        self.discount_rate_distro = stats.norm(loc=self.data.prop_mine__discount_rate, scale=0.3*self.data.prop_mine__discount_rate)
         self.market_undercut_distro = stats.uniform(loc=0.5, scale=0.5)
 
         self.ebp_leo_cost_distro = stats.beta(a=1.5, b=3, loc=self.data.ebp__leo_cost/10, scale=self.data.ebp__leo_cost*1.5)
@@ -203,6 +203,9 @@ class NPV():
     def create_case_array(self):
 
         year_index_0 = np.linspace(0,9, 10)
+        year_index_from_present = year_index_0 + 1
+        NPV_discount_factor = np.apply_along_axis(lambda n: 1 / ((1+self.discount_rate)**n), 0, year_index_from_present)
+
         LEO_demand = np.apply_along_axis(lambda n: self.leo_init_demand * (1+self.leo_annual_growth)**n, 0, year_index_0)
         EML1_demand = np.apply_along_axis(lambda n: self.eml1_init_demand * (1+self.eml1_annual_growth)**n, 0, year_index_0)
         lunar_surface_demand = np.apply_along_axis(lambda n: self.lunar_surface_init_demand * (1+self.lunar_surface_annual_growth)**n, 0, year_index_0)
@@ -226,6 +229,14 @@ class NPV():
 
         market_share = np.apply_along_axis(lambda n: self.init_market_share * (1-self.market_share_change)**n, 0, year_index_0)
 
+        LEO_revenue = np.multiply(np.multiply((discounted_ebp_leo_cost-mbp_leo_cost), LEO_demand*1000), market_share)
+        LEO_revenue_aerobraking = np.multiply(np.multiply((discounted_ebp_leo_cost-mbp_leo_cost_aerobraking), LEO_demand*1000), market_share)
+        EML1_revenue = np.multiply(np.multiply((discounted_ebp_eml1_cost-mbp_eml1_cost), EML1_demand*1000), market_share)
+        LS_revenue = np.multiply(np.multiply((discounted_ebp_lunar_surface_cost-mbp_lunar_surface_cost), lunar_surface_demand*1000), market_share)
+
+        yearly_revenue = LEO_revenue + EML1_revenue + LS_revenue
+        yearly_revenue_aerobraking = LEO_revenue_aerobraking + EML1_revenue + LS_revenue
+
         prop_mine_mass = (demand_delta * 1000) / self.prop_mine_specific_output
         total_current_mine_mass = np.array([sum(prop_mine_mass[0:x:1]) for x in range(0, len(prop_mine_mass)+1)][1:])
         total_launch_mass = prop_mine_mass + self.resupply_payload_refuel + self.prop_mine_resupply_payload
@@ -235,12 +246,23 @@ class NPV():
         operational_costs = total_current_mine_mass * self.prop_mine_specific_operational_cost + self.hab_operational_cost
         yearly_costs = launch_costs + operational_costs
 
-        
+        yearly_cash_flow = yearly_revenue - yearly_costs
+        yearly_cash_flow_aerobraking = yearly_revenue_aerobraking - yearly_costs
 
-        # print(self.ebp_leo_cost)
-        print(prop_mine_mass)
-        print(total_current_mine_mass)
-        print(operational_costs)
+        yearly_NPV = np.multiply(NPV_discount_factor, yearly_cash_flow)
+        yearly_NPV_aerobraking = np.multiply(NPV_discount_factor, yearly_cash_flow_aerobraking)
+
+        total_NPV = yearly_NPV.sum() - self.init_hab_investment
+        total_NPV_aerobraking  = yearly_NPV_aerobraking.sum() - self.init_hab_investment
+
+        print(self.ebp_leo_cost)
+        print(discounted_ebp_leo_cost-self.mbp_leo_cost)
+        print(discounted_ebp_leo_cost)
+        print(self.mbp_leo_cost)
+        print(LEO_revenue)
+        # print(NPV_discount_factor)
+        # print(yearly_cash_flow_aerobraking)
+        # print(yearly_NPV_aerobraking)
 
 
 

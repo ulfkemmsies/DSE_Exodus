@@ -112,4 +112,4 @@ power,solar,cell_gradient_v_oc_bol,-6.2,mV/K
 power,solar,cell_gradient_i_sc_bol,0.36,mA/K
 power,solar,cell_gradient_v_mp_bol,-6.7,mV/K
 power,solar,cell_gradient_i_mp_bol,0.24,mA/K
->>>>>>> 20c1770615f96d5365308fac4bd769133ea189ef
+>>>>>>> 
