@@ -34,5 +34,28 @@ class PVArrays():
         self.shadow_area_min = np.pi*self.shadow_radius_min**2
         self.shadow_area_max = np.pi*self.shadow_radius_max**2
 
-    def power():
-        self.power_vertical = self.data.moon__solar_constant*self.data.solar__maximum_area*self.data.power__PV_efficiency
+    def power(self):
+        self.power_vertical = self.data.moon__solar_constant*self.data.solar__maximum_area*0.01*self.data.solar__cell_avg_efficiency_bol\
+        *self.data.solar__cell_absorptivity*np.cos(self.inclination_max)
+        self.power_rotated = self.power_vertical/np.cos(self.inclination_max)
+        print("Power for vertical solar cell position (no inclination mechanism): ",round(self.power_vertical/1000,4), 'kW')
+        print("Power for solar cells that rotate to achieve optimal inclination: ", round(self.power_rotated/1000,4), 'kW')
+
+    def optimallayout(self):
+        self.shadow()
+        self.current_min = 2*self.shadow_radius_min*(self.number_of_towers+1)*self.shadow_radius_min
+        for i in range(1,self.number_of_towers+1):
+            N = i
+            M = self.number_of_towers/i
+            if M.is_integer()==True:
+                self.area = (N+1)*self.shadow_radius_min*(M+1)*self.shadow_radius_min
+                print(self.area)
+                print(N,"x", M)
+            if self.area < self.current_min:
+                self.current_min = self.area
+                self.grid = [N,M]
+
+Test = PVArrays()
+Test.optimallayout()
+
+
