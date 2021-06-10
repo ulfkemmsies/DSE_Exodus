@@ -23,7 +23,7 @@ class PVArrays():
         self.illumination_10m = 92 #percent of lunar year
 
         self.tower_height = 10 #m
-        self.number_of_towers = 6
+        self.number_of_towers = 10
         self.tower_panel_area = self.data.solar__maximum_area/self.number_of_towers
 
     def shadow(self):
@@ -49,13 +49,35 @@ class PVArrays():
             M = self.number_of_towers/i
             if M.is_integer()==True:
                 self.area = (N+1)*self.shadow_radius_min*(M+1)*self.shadow_radius_min
-                print(self.area)
-                print(N,"x", M)
+                #print(self.area)
+                #print(N,"x", M)
             if self.area < self.current_min:
                 self.current_min = self.area
-                self.grid = [N,M]
+                self.grid = [int(N),int(M)]
+
+    def towerposition(self):
+        self.optimallayout()
+        self.xboundary = -0.5*(self.grid[1]-1)*self.shadow_radius_min
+        self.yboundary = 0.5*(self.grid[0]-1)*self.shadow_radius_min
+        self.xcoordinates = [self.xboundary]
+        self.ycoordinates = [self.yboundary]
+        self.coordinates = []
+        for i in range(self.grid[1]-1):
+            self.xcoordinates.append(self.xcoordinates[i]+self.shadow_radius_min)
+        for j in range(self.grid[0]-1):
+            self.ycoordinates.append(self.ycoordinates[j]-self.shadow_radius_min)
+        for k in range(len(self.ycoordinates)):
+            for n in range(len(self.xcoordinates)):
+                self.coordinates.append([self.xcoordinates[n],self.ycoordinates[k]])
+
+    def cablelength(self):
+        self.towerposition()
+        length = 0
+        for i in range(len(self.coordinates)):
+            length += (self.coordinates[i][0]**2+self.coordinates[i][1]**2)**(0.5)
+        print(length)
 
 Test = PVArrays()
-Test.optimallayout()
+Test.cablelength()
 
 
