@@ -9,6 +9,7 @@ from commondata import CommonData
 import unittest
 from bisect import bisect_left
 import time
+import pylab
 
 class discrete_cdf:
     def __init__(self, data):
@@ -62,6 +63,7 @@ class NPV():
 
         self.mbp_production_cost_distro = stats.lognorm(s=0.3, loc=self.data.mbp__production_cost/2, scale=self.data.mbp__production_cost)
         self.mbp_annual_cost_decrease_distro = stats.norm(loc=self.data.mbp__annual_cost_decrease, scale=0.05*self.data.mbp__annual_cost_decrease)
+        self.mbp_aerobraking_effect_distro = stats.uniform(loc=2)
 
     def assign_vars(self):
 
@@ -101,54 +103,83 @@ class NPV():
 
         self.mbp_production_cost = self.trunc_sample(self.mbp_production_cost_distro)
         self.mbp_leo_cost = 6 * self.mbp_production_cost
-        self.mbp_leo_cost_aerobraking = 3 * self.mbp_production_cost
+        self.aerobraking_effect = self.trunc_sample(self.mbp_aerobraking_effect_distro)
+        self.mbp_leo_cost_aerobraking = self.aerobraking_effect * self.mbp_production_cost
         self.mbp_eml1_cost = 2 * self.mbp_production_cost
         self.mbp_annual_cost_decrease = self.trunc_sample(self.mbp_annual_cost_decrease_distro)
 
-    def print_distro(self, trials, distro=None, min=None, max=None, title=None, in_arr=None):
+    def print_distro(self, trials, distro=None, min=None, max=None, title=None, in_arr=None, x_axis=None, y_axis=None):
         if in_arr == None:
             r = self.trunc_sample(distro=distro, trials=trials, min=min, max=max)
         else:
             r = in_arr
+        
+        r = np.sort(r)
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
-        Q25 = np.percentile(np.sort(r), 25, interpolation = 'midpoint')
-        Q75 = np.percentile(np.sort(r), 75, interpolation = 'midpoint')
-        mean = np.sort(r).mean()
-        std = np.sort(r).std()
+        axis_color = 'lightgoldenrodyellow'
 
+        # Adjust the subplots region to leave some space for the sliders and buttons
+        # fig.subplots_adjust(left=0.25, bottom=0.25)
+
+        #calculate interquartile range, mean and standard deviations
+        Q25 = np.percentile(np.sort(r), 25, interpolation = 'midpoint').round(2)
+        Q75 = np.percentile(np.sort(r), 75, interpolation = 'midpoint').round(2)
+        IQR = Q75 - Q25
+        mean = np.sort(r).mean().round(2)
+        std = np.sort(r).std().round(2)
+
+        # Define an axes area and draw a slider in it
+        # amp_slider_ax  = fig.add_axes([0.25, 0.15, 0.65, 0.03], facecolor=axis_color)
+        # amp_slider = Slider(amp_slider_ax, 'Amp', 0.1, 10.0, valinit=amp_0)
+
+        # Draw another slider
+        # freq_slider_ax = fig.add_axes([0.25, 0.1, 0.65, 0.03], facecolor=axis_color)
+        # freq_slider = Slider(freq_slider_ax, 'Freq', 0.1, 30.0, valinit=freq_0)
+
+
+        #if plotting pure distribution, calculate CDF of negative values and plot PDF
         if distro != None:
             neg = distro.cdf(0).round(5)
-            stdcdf = (distro.cdf(mean+std).round(3) - distro.cdf(mean-std).round(3)).round(3)
-            stdcdf2 = (distro.cdf(mean+2*std).round(3) - distro.cdf(mean-2*std).round(3)).round(3)
 
             ax.plot(np.sort(r), distro.pdf(np.sort(r)), label=f"negative cdf:{neg}")
             plt.text(mean, distro.pdf(mean), f"{mean.round(2)}")
 
+        if x_axis !=None and y_axis != None:
+            plt.xlabel(x_axis)
+            plt.ylabel(y_axis)
 
-        ax.hist(r, density=True, histtype='stepfilled', alpha=0.5, bins=30)
-
-        ax.axvline(x=Q25, color="green", ls='--', alpha=0.4, label="27/75 percentiles")
+        ax.axvline(x=Q25, color="green", ls='--', alpha=0.4, label=f"27/75 percentiles\nIQR: {format(IQR,'.1E')}")
         ax.axvline(x=Q75, color="green", ls='--', alpha=0.4)
 
-        ax.axvline(x=mean+std, color="red", ls='--', alpha=0.3, label="1/2 std devs.")
+        ax.axvline(x=mean+std, color="red", ls='--', alpha=0.3, label=f"1/2 std devs.\n Std. Dev.: {format(std,'.1E')}")
         ax.axvline(x=mean+2*std, color="red", ls='--', alpha=0.2)
 
         ax.axvline(x=mean-std, color="red", ls='--', alpha=0.3)
         ax.axvline(x=mean-2*std, color="red", ls='--', alpha=0.2)
 
-        ax.axvline(x=mean, color="black", ls='--', alpha=0.4, label="mean")
+        ax.axvline(x=mean, color="black", ls='-', alpha=0.5, label=f"Mean: {format(mean,'.1E')}")
 
         if distro == None and in_arr != None:
             cdf = discrete_cdf(np.sort(r))
             cdf_vals = [cdf(point) for point in np.sort(r)]
+            billionyearlygain = np.round(cdf(1000000000),4)
+            billionyearlygain2 = cdf(2000000000)
+            billionyearlygain3 = cdf(3000000000)
             neg = cdf(0)
             billionyearlycost = cdf(-1000000000)
-            ax2 = ax.twinx()
-            ax2.plot(np.sort(r), cdf_vals, label=f"Probability of negative NPV:{neg}\nProbability of +1 billion costs per year: {billionyearlycost}")
+            billionyearlycost2 = cdf(-2000000000)
+            billionyearlycost3 = cdf(-3000000000)
+            billionyearlycost4 = cdf(-4000000000)
+            billionyearlycost5 = cdf(-5000000000)
+            ax.axvline(x=1000000000, ls='--', alpha=0.3, label=f"1+B€ Profit Prob: {np.round(1-billionyearlygain, 4)}\n2+B€ Profit Prob: {np.round(1-billionyearlygain2, 4)}\n3+B€ Profit Prob: {np.round(1-billionyearlygain3,4)}")
+            ax.axvline(x=-1000000000, ls='--', alpha=0.3, label=f"1-B€ Costs Prob: {np.round(1-billionyearlycost,4)}\n2-B€ Costs Prob: {np.round(1-billionyearlycost2,4)}\n3-B€ Costs Prob: {np.round(1-billionyearlycost3,4)}\n4-B€ Costs Prob: {np.round(1-billionyearlycost4,4)}\n5-B€ Costs Prob: {np.round(1-billionyearlycost5,4)}")
+            ax.axvline(x=0, ls='-', alpha=0.3, label=f"Negative NPV Prob: {np.round(neg,4)}")
 
+
+        ax.hist(r, density=True, histtype='stepfilled', alpha=0.6, bins=100)
 
         plt.grid(True, which='both', color='black', linestyle="--", linewidth=0.5, alpha=0.2)
         plt.minorticks_on()
@@ -161,6 +192,32 @@ class NPV():
 
         plt.close(fig)
     
+    def print_yearly_timeseries(self, arrs_in=[], labels=[], x_axis="Mission Year", y_axis=str, title=None):
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+
+        years = np.linspace(1,10,10)
+
+        for i in range(len(arrs_in)):
+            data = arrs_in[i]
+            label = labels[i]
+
+            ax.plot(years, data, label=label)
+
+        ax.set_xlabel(x_axis)
+        ax.set_ylabel(y_axis)
+
+        plt.grid(True, which='both', color='black', linestyle="--", linewidth=0.5, alpha=0.2)
+        # plt.minorticks_on()
+        ax.set_xticks(years)
+
+        if title != None:
+            plt.title(title)
+
+        plt.tight_layout()
+        plt.legend()
+        plt.show()
+
     def print_all_distros(self, trials):
 
         keys = list(self.__dict__.keys())
@@ -273,34 +330,45 @@ class NPV():
         yearly_cash_flow = yearly_revenue - yearly_costs
         yearly_cash_flow_aerobraking = yearly_revenue_aerobraking - yearly_costs
 
-        yearly_NPV = np.multiply(NPV_discount_factor, yearly_cash_flow)
-        yearly_NPV_aerobraking = np.multiply(NPV_discount_factor, yearly_cash_flow_aerobraking)
+        yearly_NPV = np.multiply(NPV_discount_factor, yearly_cash_flow) * 0.9
+        yearly_NPV[0] = (yearly_NPV[0] - self.init_hab_investment * 0.9)
 
-        total_NPV = yearly_NPV.sum() - self.init_hab_investment
-        total_NPV_aerobraking  = yearly_NPV_aerobraking.sum() - self.init_hab_investment
+        yearly_NPV_aerobraking = np.multiply(NPV_discount_factor, yearly_cash_flow_aerobraking) * 0.9
+        yearly_NPV_aerobraking[0] = (yearly_NPV_aerobraking[0] - self.init_hab_investment * 0.9) 
 
-        return total_NPV, total_NPV_aerobraking
+        total_NPV = yearly_NPV.sum()
+        total_NPV_aerobraking  = yearly_NPV_aerobraking.sum()
+
+        return total_NPV, total_NPV_aerobraking, yearly_NPV, yearly_NPV_aerobraking
 
     def get_NPV_distros(self):
         NPVs = []
         NPVs_aerobraking = []
+        yearly_NPV_arr = np.zeros(10)
+        yearly_NPV_arr_aerobraking = np.zeros(10)
 
         t0 = time.time()
 
         for i in range(self.trials):
             self.assign_vars()
-            NPV_res, NPV_aero_res = self.create_case_array()
+            NPV_res, NPV_aero_res, yearly_NPV, yearly_NPV_aerobraking = self.create_case_array()
 
             NPVs.append(NPV_res)
             NPVs_aerobraking.append(NPV_aero_res)
+            yearly_NPV_arr = np.vstack((yearly_NPV_arr, yearly_NPV))
+            yearly_NPV_arr_aerobraking = np.vstack((yearly_NPV_arr_aerobraking, yearly_NPV_aerobraking))
 
             print(f"Successfully calculated {i}-th NPV!")
 
         print(time.time() - t0, "seconds wall time")
 
-        self.print_distro(trials=self.trials, title="NPV Distribution", in_arr=NPVs)
-        self.print_distro(trials=self.trials, title="NPV Distribution\nAerobraking", in_arr=NPVs_aerobraking)
+        yearly_NPV_arr = np.mean(yearly_NPV_arr, 0)
+        yearly_NPV_arr_aerobraking = np.mean(yearly_NPV_arr_aerobraking, 0)
+
+        self.print_distro(trials=self.trials, title=f"NPV Distribution\n{self.trials} Samples", in_arr=NPVs, x_axis="NPV [Euros]", y_axis="Relative Frequency")
+        self.print_distro(trials=self.trials, title=f"NPV Distribution\nAerobraking\n{self.trials} Samples", in_arr=NPVs_aerobraking, x_axis="NPV [Euros]", y_axis="Relative Frequency")
         
+        self.print_yearly_timeseries([yearly_NPV_arr, yearly_NPV_arr_aerobraking], ["NPV", "NPV w/ Aerobraking"], y_axis="Euros", title="NPV per Mission Year")
 
 
 
