@@ -8,14 +8,13 @@ Created on Fri May 28 2021
 import numpy as np
 import matplotlib.pyplot as plt
 from commondata import CommonData
+import math as m
 
 class PVArrays():
     def __init__(self):
         # Importing the commondata file
         self.data = CommonData()
 
-        self.inclination_min = np.deg2rad(0.01) #radians
-        self.inclination_max = np.deg2rad(5) #radians
         self.longest_illumination = 233 #days
         self.longest_darkness = 4.5 #days
         self.design_longest_darkness = 8 #days
@@ -23,111 +22,156 @@ class PVArrays():
         self.illumination_10m = 92 #percent of lunar year
 
         self.tower_height = 10 #m
-        self.number_of_towers = 100
-        self.tower_panel_area = self.data.solar__maximum_area/self.number_of_towers
-        print("Total number of solar towers: ", self.number_of_towers)
-        print("Height of each solar tower: ", self.tower_height)
-        print("Solar panel area per tower: ", round(self.data.solar__maximum_area/self.number_of_towers,4), "m2")
+        self.tower_width = 2 #m
+        self.ground_clearance = 2 #m
 
-        self.voltage_required = 124.5 #V DC
+        self.cable_density = 5  #kg/m
 
-    def shadow(self):
-        self.shadow_radius_min = self.tower_height/np.tan(self.inclination_max)
-        self.shadow_radius_max = self.tower_height/np.tan(self.inclination_min)
-        self.shadow_diameter_min = 2*self.shadow_radius_min
-        self.shadow_diameter_max = 2*self.shadow_radius_max
-        self.shadow_area_min = np.pi*self.shadow_radius_min**2
-        self.shadow_area_max = np.pi*self.shadow_radius_max**2
+        self.voltage_required = 600 #V DC
 
-        print("Radius of solar tower shadow cone: ", self.shadow_radius_min, "m")
+        self.power_required_nominal = 20 #kW
+        self.power_required_manufacturing = 75 #kW
+        self.power_required = max(self.power_required_nominal,self.power_required_manufacturing)
 
-    def power(self):
-        self.power_vertical = self.data.moon__solar_constant*self.data.solar__maximum_area*0.01*self.data.solar__cell_avg_efficiency_bol\
-        *self.data.solar__cell_absorptivity*np.cos(self.inclination_max)
-        self.power_rotated = self.power_vertical/np.cos(self.inclination_max)
-        self.power_per_tower_vertical = self.power_vertical/self.number_of_towers
-        self.power_per_tower_rotated = self.power_rotated/self.number_of_towers
+    def shadow(self,maxmin):
+        self.inclination = np.deg2rad(5)  # radians
+        #maxmin is false when the minimum solar inclination is required
+        if maxmin == 'min':
+            self.inclination = np.deg2rad(0.01)  # radians
+        self.shadow_radius = self.tower_height/np.tan(self.inclination)
+        self.shadow_diameter = 2*self.shadow_radius
+        self.shadow_area = np.pi*self.shadow_radius**2
 
-        print("Power produced per tower without inclining the solar panels: ",
-              round((self.power_vertical/self.number_of_towers)/1000,4), "kW")
-        print("Total power produced without inclining the solar panels: ",
-              round(self.power_vertical / 1000, 4), "kW")
-        print("Power produced per tower with inclination mechanism in place: ",
-              round((self.power_rotated/self.number_of_towers)/1000,4), "kW")
-        print("Total power produced with inclination mechanism in place: ",
-              round(self.power_rotated/1000,4), 'kW')
+        print("Radius of solar tower shadow cone: ", self.shadow_radius, "m")
 
-    def optimallayout(self):
-        #self.shadow()
-        self.current_min = 2*self.shadow_radius_min*(self.number_of_towers+1)*self.shadow_radius_min
-        for i in range(1,self.number_of_towers+1):
+    def power(self, inclination):
+        #if inclination is true, this means the solar arrays are inclined to receive perpendicular solar rays
+        self.area_per_tower = (self.tower_height-self.ground_clearance)*self.tower_width
+        if inclination == True:
+            self.area_required = self.power_required*1000/(self.data.moon__solar_constant*
+                                                      self.data.solar__cell_absorptivity*0.01*self.data.solar__cell_avg_efficiency_bol)
+            self.number_of_towers = m.ceil(self.area_required/self.area_per_tower)
+            self.power_per_tower = self.area_per_tower*self.data.moon__solar_constant*\
+                            self.data.solar__cell_absorptivity*0.01*self.data.solar__cell_avg_efficiency_bol
+
+        else:
+            self.area_required = self.power_required*1000/(self.data.moon__solar_constant*
+            self.data.solar__cell_absorptivity*0.01*self.data.solar__cell_avg_efficiency_bol*np.cos(self.inclination))
+
+            self.number_of_towers = m.ceil(self.area_required/self.area_per_tower)
+            self.power_per_tower = self.area_per_tower * self.data.moon__solar_constant*\
+                            self.data.solar__cell_absorptivity * 0.01 * self.data.solar__cell_avg_efficiency_bol*np.cos(self.inclination)
+
+        self.total_power = self.number_of_towers*self.power_per_tower
+
+        print("Total area needed: ",self.area_required, "m2")
+        print("Total number of towers: ", self.number_of_towers)
+        print("Power produced per tower: ", self.power_per_tower, "W")
+        print("Total power produced: ", self.total_power, "W")
+
+
+    def gridfinding(self, numberoftowers):
+        self.grid = [0,0]
+        self.current_min = 2*self.shadow_radius*(self.number_of_towers+1)*self.shadow_radius
+        for i in range(1,numberoftowers+1):
             N = i
-            M = self.number_of_towers/i
+            M = numberoftowers/i
             if M.is_integer()==True:
-                self.area = (N+1)*self.shadow_radius_min*(M+1)*self.shadow_radius_min
+                self.area = (N+1)*self.shadow_radius*(M+1)*self.shadow_radius
                 #print(self.area)
                 #print(N,"x", M)
             if self.area < self.current_min:
                 self.current_min = self.area
                 self.grid = [int(N),int(M)]
+        return self.grid, self.area
+
+    def optimallayout(self):
+        self.grid = self.gridfinding(self.number_of_towers)[0]
+        if sum(self.grid)==0:
+            self.grid1, areacheck1 = self.gridfinding(self.number_of_towers+1)
+            self.grid2, areacheck2 = self.gridfinding(self.number_of_towers-1)
+            if areacheck1<areacheck2:
+                self.grid1 = self.grid
+            else:
+                self.grid2 = self.grid
+            # residual gives how much towers you are missing or have too much in the current grid, so if its negative
+            # it means your current grid contains too few towers compared to the number you need for your power requirement
+            self.residual = self.grid[0]*self.grid[1]-self.number_of_towers
+
 
     def towerposition(self):
-        #self.optimallayout()
-        self.xboundary = -0.5*(self.grid[1]-1)*self.shadow_radius_min
-        self.yboundary = 0.5*(self.grid[0]-1)*self.shadow_radius_min
+        self.xboundary = -0.5*(self.grid[1]-1)*self.shadow_radius
+        self.yboundary = 0.5*(self.grid[0]-1)*self.shadow_radius
         self.xcoordinates = [self.xboundary]
         self.ycoordinates = [self.yboundary]
         self.coordinates = []
         for i in range(self.grid[1]-1):
-            self.xcoordinates.append(self.xcoordinates[i]+self.shadow_radius_min)
+            self.xcoordinates.append(self.xcoordinates[i]+self.shadow_radius)
         for j in range(self.grid[0]-1):
-            self.ycoordinates.append(self.ycoordinates[j]-self.shadow_radius_min)
+            self.ycoordinates.append(self.ycoordinates[j]-self.shadow_radius)
         for k in range(len(self.ycoordinates)):
             for n in range(len(self.xcoordinates)):
                 self.coordinates.append([self.xcoordinates[n],self.ycoordinates[k]])
+        if self.residual < 0:
+            towerdirection = min(self.grid[0],self.grid[1])
+
+    def PVelectricalsetup(self):
+        self.number_of_cells_x = m.floor(self.tower_width/(self.data.solar__cell_xdimension/1000))
+        self.number_of_cells_y = m.floor((self.tower_height-self.ground_clearance)/(self.data.solar__cell_ydimension/1000))
+        self.total_number_of_cells = self.number_of_cells_x*self.number_of_cells_y
+
+        self.number_of_cells_series = self.voltage_required/(self.data.solar__cell_maxpower_voltage_bol/1000)
+        self.number_of_cells_series = m.ceil(self.number_of_cells_series)
+        self.voltage_supply = self.number_of_cells_series*self.data.solar__cell_maxpower_voltage_bol/1000
+
+        self.number_of_cells_parallel = m.floor(self.total_number_of_cells/self.number_of_cells_series)
+        self.current_supply = self.number_of_cells_parallel*self.data.solar__cell_maxpower_current_bol/1000
+        self.actual_number_of_cells = self.number_of_cells_parallel*self.number_of_cells_series
+
+        print("Total number of solar cells per tower: ", self.actual_number_of_cells)
+        print("Voltage supply per tower: ", self.voltage_supply, "V")
+        print("Current supply per tower: ", self.current_supply, "A")
 
     def cablelength(self):
-        #self.towerposition()
         length = 0
         for i in range(len(self.coordinates)):
-            length += (self.coordinates[i][0]**2+self.coordinates[i][1]**2)**(0.5)
+            length += (self.coordinates[i][0] ** 2 + self.coordinates[i][1] ** 2) ** (0.5)
+        self.cable_weight = length * self.cable_density
         print("Total High-Power cable length: ", length, " m")
+        print("Total cable weight: ", self.cable_weight, "kg")
+
+    def PVmass(self):
+        self.cell_weight = (self.data.solar__maximum_area*100**2*self.data.solar__average_cell_weight)/10**6
+        #make an estimate of the structural mass of the assembly
+        self.structural_mass_per_tower = self.number_of_cells_parallel*self.number_of_cells_series*1
+        print("Total solar cell weight: ",self.cell_weight, 'kg')
 
     def plotting(self):
-        #self.shadow()
-        #self.power()
-        #self.optimallayout()
-        #self.towerposition()
-        #self.cablelength()
         fig,ax = plt.subplots()
         for i in range(len(self.coordinates)):
             plt.plot(self.coordinates[i][0],self.coordinates[i][1],'c',marker="X", ms=10)
             plt.plot([self.coordinates[i][0],0],[self.coordinates[i][1],0],'b')
 
+        #circle = plt.Circle((self.coordinates[0][0], self.coordinates[0][1]),
+                            #self.shadow_radius, color='gray', label='Shadow Cone')
+        #ax.add_patch(circle)
         plt.plot(0,0,'r',marker="H", ms=25, label="Habitat")
         plt.xlabel("x [m]")
         plt.ylabel("y [m]")
         plt.title("Solar Tower Grid (Habitat in Origin)")
         plt.legend(loc='best')
         plt.show()
+        plt.close()
 
-    def PVelectricalsetup(self):
-        self.tower_current_draw = self.power_per_tower_vertical/self.voltage_required
-        self.number_of_cells_series = self.voltage_required/(self.data.solar__cell_maxpower_voltage_bol/1000)
-        self.number_of_cells_parallel = self.tower_current_draw/(self.data.solar__cell_maxpower_current_bol/1000)
-
-        print(self.number_of_cells_series)
-        print(self.number_of_cells_parallel)
-
-
-    def runprogram(self):
-        self.shadow()
-        self.power()
+    def runprogram(self,maxmin,inclination):
+        self.shadow(maxmin)
+        self.power(inclination)
         self.optimallayout()
         self.towerposition()
         self.cablelength()
         self.plotting()
         self.PVelectricalsetup()
+        self.PVmass()
 
 Test = PVArrays()
-Test.runprogram()
+Test.runprogram('max',False)

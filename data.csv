@@ -110,3 +110,5 @@ power,solar,cell_gradient_v_oc_bol,-6.2,mV/K
 power,solar,cell_gradient_i_sc_bol,0.36,mA/K
 power,solar,cell_gradient_v_mp_bol,-6.7,mV/K
 power,solar,cell_gradient_i_mp_bol,0.24,mA/K
+power,solar,cell_xdimension,80.15,mm
+power,solar,cell_ydimension,40.15,mm
