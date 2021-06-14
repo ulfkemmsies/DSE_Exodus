@@ -24,6 +24,9 @@ class PVArrays():
         self.tower_height = 10 #m
         self.tower_width = 2 #m
         self.ground_clearance = 2 #m
+        self.outer_support_beam_thickness = 20 #mm
+        self.inner_support_beam_thickness = 10 #mm
+        self.support_material_density = 2810 #kg/m3
 
         self.cable_density = 5  #kg/m
 
@@ -32,6 +35,10 @@ class PVArrays():
         self.power_required_nominal = 20 #kW
         self.power_required_manufacturing = 75 #kW
         self.power_required = max(self.power_required_nominal,self.power_required_manufacturing)
+
+        self.distance_landing_habitat = 1.9 #km
+        self.distance_habitat_solar = 1.9 #km
+        self.actual_distance_landing_habitat = 2.5 #km\
 
     def shadow(self,maxmin):
         self.inclination = np.deg2rad(5)  # radians
@@ -126,7 +133,10 @@ class PVArrays():
 
         self.number_of_cells_parallel = m.floor(self.total_number_of_cells/self.number_of_cells_series)
         self.current_supply = self.number_of_cells_parallel*self.data.solar__cell_maxpower_current_bol/1000
+
         self.actual_number_of_cells = self.number_of_cells_parallel*self.number_of_cells_series
+        self.actual_cell_width = self.number_of_cells_x*self.data.solar__cell_xdimension/1000
+        self.actual_cell_height = (self.actual_number_of_cells/self.number_of_cells_x)*self.data.solar__cell_ydimension/1000
 
         print("Total number of solar cells per tower: ", self.actual_number_of_cells)
         print("Voltage supply per tower: ", self.voltage_supply, "V")
@@ -141,10 +151,13 @@ class PVArrays():
         print("Total cable weight: ", self.cable_weight, "kg")
 
     def PVmass(self):
-        self.cell_weight = (self.data.solar__maximum_area*100**2*self.data.solar__average_cell_weight)/10**6
-        #make an estimate of the structural mass of the assembly
-        self.structural_mass_per_tower = self.number_of_cells_parallel*self.number_of_cells_series*1
-        print("Total solar cell weight: ",self.cell_weight, 'kg')
+        self.cell_weight = self.data.solar__cell_area*self.data.solar__average_cell_weight/1000
+
+        self.tower_cell_weight= self.actual_number_of_cells*self.cell_weight/1000
+        self.outer_support_weight = (2*self.actual_cell_width*(self.outer_support_beam_thickness/1000)**2\
+        +2*self.actual_cell_height*(self.outer_support_beam_thickness/1000)**2)*self.support_material_density
+        print(self.outer_support_weight)
+
 
     def plotting(self):
         fig,ax = plt.subplots()
