@@ -49,7 +49,7 @@ class Application(Frame):
                     globals()[f"{tab_name}_subtab_notebook"] = ttk.Notebook(globals()[f"{tab_name}_tab"])
 
                     for subtab_name in self.datahandler.subtabs:
-                        
+                        print(subtab_name)
                         globals()[f"{subtab_name}_subtab"] = ttk.Frame(globals()[f"{tab_name}_subtab_notebook"])
                         globals()[f"{tab_name}_subtab_notebook"].add(globals()[f"{subtab_name}_subtab"], text=self.name_cleaner(subtab_name))
                         globals()[f"{tab_name}_subtab_notebook"].pack(expand=1, fill="both")
@@ -346,43 +346,6 @@ class Application(Frame):
             self.current_Treeview.destroy()
             self.verscrlbar.destroy()
             self.create_param_table(self.current_table_tab, self.current_table_subtab)
-
-    # def destroy_table(self):
-    #     self.current_Treeview.destroy()
-    #     self.verscrlbar.destroy()
-
-    # def refresh_table(self):
-    #     self.destroy_table()
-    #     self.create_param_table()
-
-    # def undo(self, event=None):
-    #     if self.steps != 0:
-    #         self.steps -= 1
-    #         self.delete(0, END)
-    #         self.insert(END, self.changes[self.steps])
-
-    #         if hasattr(self, 'current_Treeview'):
-    #             self.current_Treeview.destroy()
-
-    #         self.create_param_table(self.current_table_tab, self.current_table_subtab)
-
-    # def redo(self, event=None):
-    #     if self.steps < len(self.changes):
-    #         self.delete(0, END)
-    #         self.insert(END, self.changes[self.steps])
-    #         self.steps += 1
-
-    #         if hasattr(self, 'current_Treeview'):
-    #             self.current_Treeview.destroy()
-
-    #         self.create_param_table(self.current_table_tab, self.current_table_subtab)
-
-    # def add_changes(self, event=None):
-    #     if self.get() != self.changes[-1]:
-    #         self.changes.append(self.get())
-    #         self.steps += 1
-
-
 
 
 #________________________________________
