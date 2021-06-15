@@ -64,9 +64,7 @@ logistics,crane,operating_speed,60.0,s
 logistics,athlete,distance,2000.0,m
 logistics,crane,volume,0.85,m3
 logistics,athlete,volume,1.8,m3
-<<<<<<< HEAD
 logistics,athlete,volume_capacity,98.0,m^3
-=======
 financials,leo,init_demand,510.0,MT/yr
 financials,eml1,init_demand,552.0,MT/year
 financials,lunar_surface,init_demand,44.0,MT/yr
@@ -115,4 +113,5 @@ power,solar,cell_gradient_v_mp_bol,-6.7,mV/K
 power,solar,cell_gradient_i_mp_bol,0.24,mA/K
 power,solar,cell_xdimension,80.15,mm
 power,solar,cell_ydimension,40.15,mm
->>>>>>> ca253224b80a20436792ca3173a435858a4aa5be
+logistics,athlete,mass_capacity,14500.0,kg
+logistics,athlete,power_draw,2000.0,W
