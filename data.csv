@@ -64,3 +64,4 @@ logistics,crane,operating_speed,60.0,s
 logistics,athlete,distance,2000.0,m
 logistics,crane,volume,0.85,m3
 logistics,athlete,volume,1.8,m3
+logistics,athlete,volume_capacity,98.0,m^3
