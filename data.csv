@@ -35,7 +35,7 @@ materials,kevlar,total_mass,272.469,kg
 general,constants,stefan_boltzmann_constant,0.0,W/(m^2*K^4)
 general,constants,gas_constant,8.314,J/(K*mol)
 general,constants,gravitational_constant,0.0,m^3/(kg*s^2)
-materials,kevlar,total_mass,949.233,kg
+materials,kevlar,total_mass,949.2330000000001,kg
 general,constants,stefan_boltzmann_constant,5.670374419e-08,W/(m^2*K^4)
 general,constants,gas_constant,8.314462618153241,J/(K*mol)
 general,constants,gravitational_constant,6.6743015e-11,m^3/(kg*s^2)
@@ -115,3 +115,9 @@ power,solar,cell_xdimension,80.15,mm
 power,solar,cell_ydimension,40.15,mm
 logistics,athlete,mass_capacity,14500.0,kg
 logistics,athlete,power_draw,2000.0,W
+life_support,water_recovery,upa_recovery,90.0,%
+life_support,water_recovery,wpa_recovery,96.0,%
+life_support,water_recovery,urine_and_flush_mass,2.0,kg/CM-d
+life_support,water_recovery,total_waste_water,15.962,kg/CM-d
+life_support,water_recovery,water_reserve_mass,550.0,kg
+general,constants,water_density,1003.0,kg/m^3
