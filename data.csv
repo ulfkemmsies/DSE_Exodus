@@ -35,7 +35,7 @@ materials,kevlar,total_mass,272.469,kg
 general,constants,stefan_boltzmann_constant,0.0,W/(m^2*K^4)
 general,constants,gas_constant,8.314,J/(K*mol)
 general,constants,gravitational_constant,0.0,m^3/(kg*s^2)
-materials,kevlar,total_mass,949.2330000000001,kg
+materials,kevlar,total_mass,949.233,kg
 general,constants,stefan_boltzmann_constant,5.670374419e-08,W/(m^2*K^4)
 general,constants,gas_constant,8.314462618153241,J/(K*mol)
 general,constants,gravitational_constant,6.6743015e-11,m^3/(kg*s^2)
@@ -121,3 +121,18 @@ life_support,water_recovery,urine_and_flush_mass,2.0,kg/CM-d
 life_support,water_recovery,total_waste_water,15.962,kg/CM-d
 life_support,water_recovery,water_reserve_mass,550.0,kg
 general,constants,water_density,1003.0,kg/m^3
+materials,layers,emod_insulation,3500000000.0,Pa
+materials,layers,emod_bladder,550000000.0,Pa
+materials,layers,emod_restraint,178000000000.0,Pa
+materials,layers,emod_radiation,320000000.0,Pa
+materials,layers,emod_lining,7900000000.0,Pa
+materials,layers,tensile_insulation,124000000,Pa
+materials,layers,tensile_bladder,89600000,Pa
+materials,layers,tensile_restraint,4400000000,Pa
+materials,layers,tensile_radiation,10000000,Pa
+materials,layers,tensile_lining,700000000,Pa
+materials,layers,density_insulation,1410,kg/m^3
+materials,layers,density_bladder,1780,kg/m^3
+materials,layers,density_restraint,980,kg/m^3
+materials,layers,density_radiation,922,kg/m^3
+materials,layers,density_lining,1380,kg/m^3
