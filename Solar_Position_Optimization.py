@@ -43,12 +43,14 @@ class PVArrays():
         self.back_cover_material_density = 2000 #kg/m3 #CFPR
         self.front_cover_material_density = 2500 #kg/m3 #Tempered glass
 
-        self.cable_density = 5  #kg/m
+        self.cable_density = 1.4  #km/m, from submarine cables (1400 kg per 1000 m)
+        self.resistivity_silver = 15.87*10**(-9) #Ohm*meter
+        self.cable_radius = 5 #mm
 
         self.voltage_required = 600 #V DC
 
         self.power_required_nominal = 20 #kW
-        self.power_required_manufacturing = 75 #kW
+        self.power_required_manufacturing = 76 #kW
         self.power_required = max(self.power_required_nominal,self.power_required_manufacturing)
 
         self.distance_landing_habitat = 1.9 #km
@@ -138,8 +140,8 @@ class PVArrays():
         for k in range(len(self.ycoordinates)):
             for n in range(len(self.xcoordinates)):
                 self.coordinates.append([self.xcoordinates[n],self.ycoordinates[k]])
-        if self.residual < 0:
-            towerdirection = min(self.grid[0],self.grid[1])
+        #if (self.residual < 0)==True:
+            #towerdirection = min(self.grid[0],self.grid[1])
 
     def PVelectricalsetup(self):
         self.number_of_cells_x = m.floor(self.tower_width/(self.data.solar__cell_xdimension/1000))
@@ -162,14 +164,21 @@ class PVArrays():
         print("Current supply per tower: ", self.current_supply, "A")
 
     def cablelength(self):
+        self.PVelectricalsetup()
         self.internal_length = 0
+        self.transmission_loss = 0
         for i in range(len(self.coordinates)):
-            self.internal_length += (self.coordinates[i][0] ** 2 + self.coordinates[i][1] ** 2) ** (0.5)
+            self.cable_length = (self.coordinates[i][0] ** 2 + self.coordinates[i][1] ** 2) ** (0.5)
+            self.internal_length += self.cable_length
+            self.wire_resistance = self.resistivity_silver*self.cable_length/(np.pi*(self.cable_radius/1000)**2)
+            self.transmission_loss += self.wire_resistance*self.current_supply**2
+
         self.total_length = self.internal_length+self.distance_habitat_solar*1000
         self.cable_weight = self.total_length * self.cable_density
 
         print("Total High-Power cable length: ", self.total_length, " m")
         print("Total cable weight: ", self.cable_weight, "kg")
+        print("Total transmission losses: ", self.transmission_loss, "W")
 
     def PVmass(self):
         self.cell_mass = self.data.solar__cell_area*self.data.solar__average_cell_weight/1000
@@ -223,13 +232,11 @@ class PVArrays():
         print("Total volume of single solar tower: ", self.solartower_total_volume, "m3")
         print("Total mass of entire solar farm: ", self.total_solarfarm_mass, "kg")
         print("Total volume of entire solar farm: ", self.total_solarfarm_volume, "m3")
-        print(self.solarflower_mass)
-        print(self.panel_assembly_mass_total)
 
     def PVsetupenergy(self):
         self.number_of_trips = m.ceil(self.total_solarfarm_mass/self.data.athlete__mass_capacity)
         self.travel_time = (self.distance_habitat_solar+self.distance_landing_habitat)*1000\
-        /self.data.athlete__velocity
+        /(self.data.athlete__velocity/4)
 
         self.energy_req_landing_solar_farm = self.travel_time*self.data.athlete__power_draw
 
@@ -249,6 +256,7 @@ class PVArrays():
         self.total_energy_needed = self.energy_req_landing_solar_farm+(self.energy_req_solarpanels+self.energy_req_solarflower)\
         *self.number_of_towers
 
+        print(self.travel_time/60)
         print("Power required for solar tower erection: ",self.power_req_solarpanels+self.power_req_solarflower)
         print(self.total_solarfarm_set_up_time/60)
         print(self.total_energy_needed/1000)
