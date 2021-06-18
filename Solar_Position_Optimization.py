@@ -282,5 +282,6 @@ class PVArrays():
         self.PVmass()
         self.PVsetupenergy()
 
-Test = PVArrays()
-Test.runprogram('max',False)
+if __name__ == "__main__":
+    Test = PVArrays()
+    Test.runprogram('max',False)

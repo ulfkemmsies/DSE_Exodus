@@ -119,7 +119,6 @@ life_support,water_recovery,upa_recovery,90.0,%
 life_support,water_recovery,wpa_recovery,96.0,%
 life_support,water_recovery,water_reserve_mass,550.0,kg
 general,constants,water_density,1003.0,kg/m^3
-<<<<<<< HEAD
 life_support,gas_storage,airlock_cycles,52.0,-
 life_support,gas_storage,leakage_rate,1.814,kg/d
 general,habitat,inflatable_length,26.95,m
@@ -133,7 +132,6 @@ life_support,water_recovery,total_water_mass,2065.626,kg
 life_support,gas_storage,total_gas_storage,2134.906,kg
 life_support,total_mass,total_ls_mass,8387.802,kg
 life_support,total_mass,ls_mass_excluding_water_and_gas,4187.27,kg
-=======
 materials,layers,emod_insulation,3500000000.0,Pa
 materials,layers,emod_bladder,550000000.0,Pa
 materials,layers,emod_restraint,178000000000.0,Pa
@@ -149,4 +147,3 @@ materials,layers,density_bladder,1780,kg/m^3
 materials,layers,density_restraint,980,kg/m^3
 materials,layers,density_radiation,922,kg/m^3
 materials,layers,density_lining,1380,kg/m^3
->>>>>>> 4e990c465216e7b03843073c45bb60a39ff54075
