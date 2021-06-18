@@ -1,5 +1,3 @@
-from tkinter import Label
-from matplotlib import scale
 from matplotlib.colors import to_rgba_array
 import numpy as np
 import scipy as sp
@@ -9,7 +7,13 @@ from commondata import CommonData
 import unittest
 from bisect import bisect_left
 import time
-import pylab
+
+
+def name_cleaner(entry):
+    out = entry.replace("_distro", "")
+    out = out.replace("_", " ")
+    out = out.capitalize()
+    return out
 
 class discrete_cdf:
     def __init__(self, data):
@@ -26,7 +30,9 @@ class NPV():
         self.data = CommonData()
         self.create_distros()
         self.assign_vars()
-        self.get_NPV_distros()
+
+        self.print_all_distros(trials=trials)
+        # self.get_NPV_distros()
 
     def create_distros(self):
         self.init_hab_investment_distro = stats.lognorm(s=0.3, loc=self.data.habitat__init_investment/2, scale=self.data.habitat__init_investment)
@@ -34,27 +40,27 @@ class NPV():
         self.resupply_payload_distro = stats.norm(loc=self.data.habitat__resupply_payload, scale=0.1*self.data.habitat__resupply_payload)
         self.resupply_payload_refuel_distro = stats.norm(loc=self.data.habitat__resupply_payload_refueling, scale=0.1*self.data.habitat__resupply_payload_refueling)
 
-        self.return_prop_distro = stats.norm(loc=self.data.launch_system__return_prop, scale=0.05*self.data.launch_system__return_prop)
+        self.return_prop_distro = stats.norm(loc=self.data.launch_system__return_prop, scale=0.1*self.data.launch_system__return_prop)
 
-        self.leo_init_demand_distro = stats.norm(loc=self.data.leo__init_demand, scale=0.05*self.data.leo__init_demand)
-        self.leo_annual_growth_distro = stats.norm(loc=self.data.leo__annual_growth, scale=0.05*self.data.leo__annual_growth)
-        self.leo_annual_launch_cost_decrease_distro = stats.norm(loc=self.data.launch_system__annual_cost_decrease, scale=0.05*self.data.launch_system__annual_cost_decrease)
+        self.leo_init_demand_distro = stats.norm(loc=self.data.leo__init_demand, scale=0.1*self.data.leo__init_demand)
+        self.leo_annual_growth_distro = stats.norm(loc=self.data.leo__annual_growth, scale=0.2*self.data.leo__annual_growth)
+        self.leo_annual_launch_cost_decrease_distro = stats.norm(loc=self.data.launch_system__annual_cost_decrease, scale=0.2*self.data.launch_system__annual_cost_decrease)
 
-        self.eml1_init_demand_distro = stats.norm(loc=self.data.eml1__init_demand, scale=0.05*self.data.eml1__init_demand)
-        self.eml1_annual_growth_distro = stats.norm(loc=self.data.eml1__annual_growth, scale=0.05*self.data.eml1__annual_growth)
+        self.eml1_init_demand_distro = stats.norm(loc=self.data.eml1__init_demand, scale=0.1*self.data.eml1__init_demand)
+        self.eml1_annual_growth_distro = stats.norm(loc=self.data.eml1__annual_growth, scale=0.2*self.data.eml1__annual_growth)
 
-        self.lunar_surface_init_demand_distro = stats.norm(loc=self.data.lunar_surface__init_demand, scale=0.05*self.data.lunar_surface__init_demand)
-        self.lunar_surface_annual_growth_distro = stats.norm(loc=self.data.lunar_surface__annual_growth, scale=0.05*self.data.lunar_surface__annual_growth)
-        self.LS_annual_launch_cost_decrease_distro = stats.norm(loc=self.data.lunar_surface__annual_launch_cost_decrease, scale=0.05*self.data.lunar_surface__annual_launch_cost_decrease)
+        self.lunar_surface_init_demand_distro = stats.norm(loc=self.data.lunar_surface__init_demand, scale=0.1*self.data.lunar_surface__init_demand)
+        self.lunar_surface_annual_growth_distro = stats.norm(loc=self.data.lunar_surface__annual_growth, scale=0.2*self.data.lunar_surface__annual_growth)
+        self.LS_annual_launch_cost_decrease_distro = stats.norm(loc=self.data.lunar_surface__annual_launch_cost_decrease, scale=0.2*self.data.lunar_surface__annual_launch_cost_decrease)
 
         self.prop_mine_specific_dev_cost_distro = stats.lognorm(s=0.3, loc=self.data.prop_mine__specific_dev_cost/2, scale=self.data.prop_mine__specific_dev_cost)
         self.prop_mine_specific_operational_cost_distro = stats.lognorm(s=0.3, loc=self.data.prop_mine__specific_operational_cost/2, scale=self.data.prop_mine__specific_operational_cost)
-        self.prop_mine_specific_output_distro = stats.norm(loc=self.data.prop_mine__specific_output, scale=0.05*self.data.prop_mine__specific_output)
+        self.prop_mine_specific_output_distro = stats.norm(loc=self.data.prop_mine__specific_output, scale=0.1*self.data.prop_mine__specific_output)
         self.prop_mine_resupply_payload_distro = stats.lognorm(s=0.3, loc=self.data.prop_mine__resupply_payload/2, scale=self.data.prop_mine__resupply_payload)
 
         self.equity_percent_distro = stats.uniform()
         self.init_market_share_distro = stats.uniform(loc=0.5, scale=0.5)
-        self.market_share_change_distro = stats.norm(loc=self.data.prop_mine__market_share_change_rate, scale=0.05*self.data.prop_mine__market_share_change_rate)
+        self.market_share_change_distro = stats.norm(loc=self.data.prop_mine__market_share_change_rate, scale=0.2*self.data.prop_mine__market_share_change_rate)
         self.discount_rate_distro = stats.norm(loc=self.data.prop_mine__discount_rate, scale=0.3*self.data.prop_mine__discount_rate)
         self.market_undercut_distro = stats.uniform(loc=0.5, scale=0.5)
 
@@ -62,7 +68,7 @@ class NPV():
         self.ebp_production_cost_distro = stats.lognorm(s=0.3, loc=self.data.ebp__production_cost/2, scale=self.data.ebp__production_cost)
 
         self.mbp_production_cost_distro = stats.lognorm(s=0.3, loc=self.data.mbp__production_cost/2, scale=self.data.mbp__production_cost)
-        self.mbp_annual_cost_decrease_distro = stats.norm(loc=self.data.mbp__annual_cost_decrease, scale=0.05*self.data.mbp__annual_cost_decrease)
+        self.mbp_annual_cost_decrease_distro = stats.norm(loc=self.data.mbp__annual_cost_decrease, scale=0.2*self.data.mbp__annual_cost_decrease)
         self.mbp_aerobraking_effect_distro = stats.uniform(loc=2)
 
     def assign_vars(self):
@@ -144,8 +150,8 @@ class NPV():
         if distro != None:
             neg = distro.cdf(0).round(5)
 
-            ax.plot(np.sort(r), distro.pdf(np.sort(r)), label=f"negative cdf:{neg}")
-            plt.text(mean, distro.pdf(mean), f"{mean.round(2)}")
+            ax.plot(np.sort(r), distro.pdf(np.sort(r)))
+            plt.text(mean, distro.pdf(mean), f"{format(mean,'.1E')}")
 
         if x_axis !=None and y_axis != None:
             plt.xlabel(x_axis)
@@ -179,16 +185,20 @@ class NPV():
             ax.axvline(x=0, ls='-', alpha=0.3, label=f"Negative NPV Prob: {np.round(neg,4)}")
 
 
-        ax.hist(r, density=True, histtype='stepfilled', alpha=0.6, bins=100)
+        ax.hist(r, density=True, histtype='stepfilled', alpha=0.5, bins=100, label=f"{trials} samples")
 
         plt.grid(True, which='both', color='black', linestyle="--", linewidth=0.5, alpha=0.2)
         plt.minorticks_on()
+
+        title = name_cleaner(title)
         plt.title(f"{title}\n")
+
         plt.tight_layout()
 
         plt.legend()
-        # plt.savefig(fname=f"distro_plots/{title}.jpeg")
+        plt.savefig(fname=f"distro_plots/{title}.jpeg", dpi=300)
         plt.show()
+        
 
         plt.close(fig)
     
@@ -360,18 +370,16 @@ class NPV():
 
             print(f"Successfully calculated {i}-th NPV!")
 
-        print(time.time() - t0, "seconds wall time")
+        print(time.time() - t0, "seconds")
 
-        yearly_NPV_arr = np.mean(yearly_NPV_arr, 0)
-        yearly_NPV_arr_aerobraking = np.mean(yearly_NPV_arr_aerobraking, 0)
+        # yearly_NPV_arr = np.mean(yearly_NPV_arr, 0)
+        # yearly_NPV_arr_aerobraking = np.mean(yearly_NPV_arr_aerobraking, 0)
 
-        self.print_distro(trials=self.trials, title=f"NPV Distribution\n{self.trials} Samples", in_arr=NPVs, x_axis="NPV [Euros]", y_axis="Relative Frequency")
-        self.print_distro(trials=self.trials, title=f"NPV Distribution\nAerobraking\n{self.trials} Samples", in_arr=NPVs_aerobraking, x_axis="NPV [Euros]", y_axis="Relative Frequency")
+        # self.print_distro(trials=self.trials, title=f"NPV Distribution\n{self.trials} Samples", in_arr=NPVs, x_axis="NPV [Euros]", y_axis="Relative Frequency")
+        # self.print_distro(trials=self.trials, title=f"NPV Distribution\nAerobraking\n{self.trials} Samples", in_arr=NPVs_aerobraking, x_axis="NPV [Euros]", y_axis="Relative Frequency")
         
-        self.print_yearly_timeseries([yearly_NPV_arr, yearly_NPV_arr_aerobraking], ["NPV", "NPV w/ Aerobraking"], y_axis="Euros", title="NPV per Mission Year")
-
-
+        # self.print_yearly_timeseries([yearly_NPV_arr, yearly_NPV_arr_aerobraking], ["NPV", "NPV w/ Aerobraking"], y_axis="Euros", title="NPV per Mission Year")
 
 
 if __name__ == "__main__":
-    test = NPV(5000)
+    test = NPV(50000)
