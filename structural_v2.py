@@ -9,7 +9,7 @@ class StressRelated():
 
         self.regolith_weight = self.data.regolith__total_mass * self.data.moon__gravity
 
-        self.t_insulation = 0.01
+        self.t_insulation = 0.005
         self.t_bladder = 0.001
         self.t_lining = 0.0004
         self.t_radiation = 0.02
@@ -82,7 +82,7 @@ class StressRelated():
 Test = StressRelated()
 print(Test)
 
-class UnitTest(unittest.TestCase):
+#class UnitTest(unittest.TestCase):
 
     #def SetUp(self):
     #    self.Test_Struc = set up unit value scenario
@@ -90,5 +90,5 @@ class UnitTest(unittest.TestCase):
     #def test_inflatable_thickness(self):
         #self.assertEqual(truncate(self.Test_Struc.inflatable_thickness, 2), 0.010)
 
-if __name__ == '__main__':
-    unittest.main()
+#if __name__ == '__main__':
+#    unittest.main()
