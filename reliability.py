@@ -14,10 +14,7 @@ for b,t,n in zip(beta,theta,name):
 c = 1-np.exp(-(T/400982)**0.39)
 c = 1-c*c
 ax.plot(T,c ,label="Communication")
-lf = 1-np.exp(-1*3*10**-5 * 24* T*365)
-lf = 1-lf*lf
-ax.plot(T,lf,label="Life Support")
-total = total * 0.97*0.945*0.995*0.995*0.97*c*lf
+total = total * 0.98*0.965*0.995*0.995*0.98*c*0.98
 ax.plot(T,total,label="Mission Reliability")
 ax.set_xlim(0,1)
 #ax.set_ylim(0.94,1.)

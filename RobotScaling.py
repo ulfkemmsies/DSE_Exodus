@@ -54,8 +54,8 @@ class Robots():
         self.crane_calculations(350)
         self.transporter_calculations(10)
 
-    
-Test = Robots()
-# Test.excavation_time_underneath()
+if __name__ == "__main__":
+    Test = Robots()
+    # Test.excavation_time_underneath()
 
-print(Test.bagsize)
+    print(Test.bagsize)

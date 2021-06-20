@@ -59,6 +59,8 @@ class CommonData():
             attr_name = f"{objects[i]}__{params[i]}"
             setattr(self, attr_name, values[i])
 
+    
+
     def attributes_to_df(self):
         keys = list(self.__dict__.keys())
         filtered = list(filter(lambda item: item not in ['df', 'tab_names', 'subtabs', 'missing_keys'] ,keys))
