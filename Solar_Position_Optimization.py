@@ -50,7 +50,7 @@ class PVArrays():
         self.voltage_required = 600 #V DC
 
         self.power_required_nominal = 20 #kW
-        self.power_required_manufacturing = 76 #kW
+        self.power_required_manufacturing = 75/(1-0.02)**2 #kW #taking into account a 2% degradation over two years
         self.power_required = max(self.power_required_nominal,self.power_required_manufacturing)
 
         self.distance_landing_habitat = 1.9 #km
@@ -172,12 +172,15 @@ class PVArrays():
             self.internal_length += self.cable_length
             self.wire_resistance = self.resistivity_silver*self.cable_length/(np.pi*(self.cable_radius/1000)**2)
             self.transmission_loss += self.wire_resistance*self.current_supply**2
-
         self.total_length = self.internal_length+self.distance_habitat_solar*1000
         self.cable_weight = self.total_length * self.cable_density
-
+        self.cable_volume = (25/2000)**2*np.pi*self.total_length
+        #if self.residual != 0:
+            #print("ADD FINAL CABLE MANUALLY TO MASS AND VOLUME")
+            
         print("Total High-Power cable length: ", self.total_length, " m")
         print("Total cable weight: ", self.cable_weight, "kg")
+        print("Total cable volume: ", self.cable_volume, "m3")
         print("Total transmission losses: ", self.transmission_loss, "W")
 
     def PVmass(self):
@@ -256,10 +259,12 @@ class PVArrays():
         self.total_energy_needed = self.energy_req_landing_solar_farm+(self.energy_req_solarpanels+self.energy_req_solarflower)\
         *self.number_of_towers
 
-        print(self.travel_time/60)
+        print("Total travel time from landing site to solar farm position: ", self.travel_time/60, "minutes")
         print("Power required for solar tower erection: ",self.power_req_solarpanels+self.power_req_solarflower)
-        print(self.total_solarfarm_set_up_time/60)
-        print(self.total_energy_needed/1000)
+        print("Total time to set up the solar farm: ", self.total_solarfarm_set_up_time/60, "minutes")
+        print("Energy needed for the erection of one solar tower: ", self.energy_req_solarpanels+self.energy_req_solarpanels, "J")
+        print("Total energy needed to set up solar farm: ", self.total_energy_needed/1000, "kJ")
+        print("Power required to set up solar farm: ", 4000+self.power_req_solarflower+self.power_req_solarpanels, "W")
 
 
     def plotting(self):
@@ -279,6 +284,14 @@ class PVArrays():
         plt.show()
         plt.close()
 
+    def cablefitting(self):
+        self.radius = 1
+        self.cable_perimeter = 0
+        while self.radius > 0:
+            self.cable_perimeter += 2 * np.pi * self.radius
+            self.radius -= 25 / 1000
+        print(self.cable_perimeter)
+
     def runprogram(self,maxmin,inclination):
         self.shadow(maxmin)
         self.power(inclination)
@@ -289,6 +302,8 @@ class PVArrays():
         self.PVelectricalsetup()
         self.PVmass()
         self.PVsetupenergy()
+        self.cablefitting()
+
 
 Test = PVArrays()
 Test.runprogram('max',False)
