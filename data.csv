@@ -177,3 +177,4 @@ general,launch_system,lh2lox_specific_impulse_vac,455.0,s
 general,launch_system,starship_dry_mass,130000.0,kg
 general,launch_system,starship_prop_capacity,1200000.0,kg
 general,launch_system,ariane_pl_mass,21600.0,kg
+logistics,crane,power,350.0,W

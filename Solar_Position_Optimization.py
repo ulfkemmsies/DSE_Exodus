@@ -167,11 +167,14 @@ class PVArrays():
         self.PVelectricalsetup()
         self.internal_length = 0
         self.transmission_loss = 0
+        self.minimum_list = []
         for i in range(len(self.coordinates)):
             self.cable_length = (self.coordinates[i][0] ** 2 + self.coordinates[i][1] ** 2) ** (0.5)
             self.internal_length += self.cable_length
             self.wire_resistance = self.resistivity_silver*self.cable_length/(np.pi*(self.cable_radius/1000)**2)
             self.transmission_loss += self.wire_resistance*self.current_supply**2
+            self.minimum_list.append(self.cable_length)
+
         self.total_length = self.internal_length+self.distance_habitat_solar*1000
         self.cable_weight = self.total_length * self.cable_density
         self.cable_volume = (25/2000)**2*np.pi*self.total_length
@@ -237,17 +240,19 @@ class PVArrays():
         print("Total volume of entire solar farm: ", self.total_solarfarm_volume, "m3")
 
     def PVsetupenergy(self):
-        self.number_of_trips = m.ceil(self.total_solarfarm_mass/self.data.athlete__mass_capacity)
+        self.number_of_trips = max(m.ceil((self.total_solarfarm_mass+self.cable_weight)/self.data.athlete__mass_capacity)/2,1)
         self.travel_time = (self.distance_habitat_solar+self.distance_landing_habitat)*1000\
-        /(self.data.athlete__velocity/4)
+        /(self.data.athlete__velocity/4)+(min(self.minimum_list)/self.data.athlete__velocity/4)
 
-        self.energy_req_landing_solar_farm = self.travel_time*self.data.athlete__power_draw
+        self.energy_req_landing_solar_farm = self.travel_time*self.data.athlete__power_draw*2
 
         #energy required for the erection of the solarflower
         self.energy_req_solarflower = self.solarflower_mass*self.data.moon__gravity*(self.tower_height/2)*self.safety_factor_energy
         #energy required for the erection of the solar panels
         self.energy_req_solarpanels = self.panel_assembly_mass_total*self.data.moon__gravity*\
                                       (self.ground_clearance+(self.tower_height-self.ground_clearance)/2)*self.safety_factor_energy
+        self.energy_req_crane = self.data.crane__power*(self.deployment_time_panels+self.deployment_time_sunflower)
+
         #power required for solarflower erection
         self.power_req_solarflower = self.energy_req_solarflower/self.deployment_time_sunflower
         #power required for solar panels erection
@@ -256,14 +261,17 @@ class PVArrays():
         self.total_solarfarm_set_up_time = self.travel_time+self.internal_length/self.data.athlete__velocity+\
             self.number_of_towers*(self.deployment_time_panels+self.deployment_time_sunflower)
 
-        self.total_energy_needed = self.energy_req_landing_solar_farm+(self.energy_req_solarpanels+self.energy_req_solarflower)\
-        *self.number_of_towers
+        self.total_power_needed = self.data.athlete__power_draw*2+self.data.crane__power+\
+        self.power_req_solarpanels+self.power_req_solarflower
+
+        self.total_energy_needed = self.energy_req_landing_solar_farm+self.energy_req_solarpanels+self.energy_req_solarflower+\
+            self.energy_req_crane
 
         print("Total travel time from landing site to solar farm position: ", self.travel_time/60, "minutes")
-        print("Power required for solar tower erection: ",self.power_req_solarpanels+self.power_req_solarflower)
+        print("Power required for solar tower erection: ",self.total_power_needed)
         print("Total time to set up the solar farm: ", self.total_solarfarm_set_up_time/60, "minutes")
-        print("Energy needed for the erection of one solar tower: ", self.energy_req_solarpanels+self.energy_req_solarpanels, "J")
-        print("Total energy needed to set up solar farm: ", self.total_energy_needed/1000, "kJ")
+        print("Energy needed for the erection of one solar tower: ", self.energy_req_solarpanels+self.energy_req_solarpanels+self.energy_req_crane, "J")
+        print("Total energy needed to set up solar farm before being self-sustaining: ", self.total_energy_needed/1000, "kJ")
         print("Power required to set up solar farm: ", 4000+self.power_req_solarflower+self.power_req_solarpanels, "W")
 
 
