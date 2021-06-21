@@ -27,9 +27,9 @@ general,habitat,length,27.0,m
 general,habitat,internal_pressure,101325.0,Pa
 general,habitat,radius,3.0,m
 general,habitat,floor_depth,1.0,m
-materials,regolith,thickness,0.825,m
-materials,regolith,total_volume,717.5,m3
-materials,regolith,total_mass,1073251.0,kg
+materials,regolith,thickness,1.0,m
+materials,regolith,total_volume,767.556,m3
+materials,regolith,total_mass,1151335.427,kg
 materials,kevlar,thickness,0.0,m
 materials,kevlar,total_mass,949.233,kg
 general,constants,stefan_boltzmann_constant,0.0,W/(m^2*K^4)
@@ -179,13 +179,7 @@ logistics,robotarm,volume,0.2,m^3
 logistics,bagging,volume,12.0,m^3
 logistics,nipper,volume,0.36,m^3
 general,habitat,inflatable_mass,17787.967,kg
-general,habitat,inflatable_volume,15.041,m3
-general,habitat,inflatable_mass,17787.967,kg
-general,habitat,inflatable_volume,15.040999999999999,m3
-general,habitat,inflatable_mass,15843.805,kg
 general,habitat,inflatable_volume,15.04,m3
-general,habitat,inflatable_mass,17787.967,kg
-general,habitat,inflatable_volume,15.041,m3
 logistics,all_logistics,total_mass,6237.0,kg
 logistics,all_logistics,total_volume,75.36,m3
 logistics,all_logistics,power_draw,55300.0,W

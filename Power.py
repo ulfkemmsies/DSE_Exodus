@@ -84,7 +84,6 @@ class PowerRelated():
 
         self.data.power_storage__total_mass = self.h2_tank_mass + self.o2_tank_mass + self.h2_mass + self.o2_mass
         self.data.power_storage__total_volume = self.h2_tank_volume + self.o2_tank_volume + self.h2_volume + self.o2_volume
-
-Test = PowerRelated()
-print(Test)
-
+        
+if __name__ == "__main__":
+    Test = PowerRelated()
