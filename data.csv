@@ -179,9 +179,13 @@ logistics,robotarm,volume,0.2,m^3
 logistics,bagging,volume,12.0,m^3
 logistics,nipper,volume,0.36,m^3
 general,habitat,inflatable_mass,17787.967,kg
-general,habitat,inflatable_volume,15.04,m3
+general,habitat,inflatable_volume,15.041,m3
 general,habitat,inflatable_mass,17787.967,kg
 general,habitat,inflatable_volume,15.040999999999999,m3
+general,habitat,inflatable_mass,15843.805,kg
+general,habitat,inflatable_volume,15.04,m3
+general,habitat,inflatable_mass,17787.967,kg
+general,habitat,inflatable_volume,15.041,m3
 logistics,all_logistics,total_mass,6237.0,kg
 logistics,all_logistics,total_volume,75.36,m3
 logistics,all_logistics,power_draw,55300.0,W
@@ -197,3 +201,5 @@ general,habitat,day_peak_power,37509.0,W
 general,habitat,night_peak_power,8783.0,W
 general,habitat,day_avg_power,29149.0,W
 general,habitat,night_avg_power,5179.0,W
+life_support,thermal,power_draw,480.0,W
+life_support,total_mass,total_ls_power,10627.0,W

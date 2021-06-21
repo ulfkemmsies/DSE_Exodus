@@ -49,8 +49,8 @@ class PVArrays():
 
         self.voltage_required = 600 #V DC
 
-        self.power_required_nominal = self.data.habitat__day_peak_power
-        self.power_required_manufacturing = self.data.all_logistics__power_draw/(1-0.02)**2 #kW #taking into account a 2% degradation over two years #GET FROM GUI
+        self.power_required_nominal = self.data.habitat__day_peak_power / 1000
+        self.power_required_manufacturing = (self.data.all_logistics__power_draw/(1-0.02)**2)/1000 #kW #taking into account a 2% degradation over two years #GET FROM GUI
         self.power_required = max(self.power_required_nominal,self.power_required_manufacturing)
 
         self.distance_landing_habitat = 1.9 #km

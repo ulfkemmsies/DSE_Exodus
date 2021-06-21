@@ -46,6 +46,7 @@ class Safehouse():
         self.safehouse_total_weight = self.underground_weight+self.top_weight+self.endcaps_weight+self.bottom_rigid_weight+self.bottom_water_weight
 
         print(self.safehouse_total_weight)
+        self.data.habitat__safehouse_mass = self.safehouse_total_weight
 
 
 

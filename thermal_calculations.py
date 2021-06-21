@@ -112,7 +112,7 @@ class ThermalControl():
         self.required_MMAC_units = 2
 
         self.thermal_power_budget = self.required_MMAC_units * self.power_draw_MMAC
-
+        self.data.thermal__power_draw = self.thermal_power_budget
         print("thermal power budget =", self.thermal_power_budget)
 
     def total_calc(self):
