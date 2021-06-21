@@ -101,7 +101,7 @@ class Robottests(unittest.TestCase):
         self.assertAlmostEqual(self.example.bagging_needed, 27)
 
 if __name__ == "__main__":
-    RunProgramm = Robots(50,317,350,10,277)
+    RunProgramm = Robots(50,317,350,10,118)
     
     # unittest.main()
     # Test.excavation_time_underneath()
