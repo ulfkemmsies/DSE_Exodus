@@ -31,11 +31,11 @@ materials,regolith,thickness,0.825,m
 materials,regolith,total_volume,717.5,m3
 materials,regolith,total_mass,1073251.0,kg
 materials,kevlar,thickness,0.0,m
-materials,kevlar,total_mass,949.2330000000001,kg
+materials,kevlar,total_mass,949.233,kg
 general,constants,stefan_boltzmann_constant,0.0,W/(m^2*K^4)
 general,constants,gas_constant,8.314,J/(K*mol)
 general,constants,gravitational_constant,0.0,m^3/(kg*s^2)
-materials,kevlar,total_mass,949.2330000000001,kg
+materials,kevlar,total_mass,949.233,kg
 general,constants,stefan_boltzmann_constant,5.67e-08,W/(m^2*K^4)
 general,constants,gas_constant,8.314462618,J/(K*mol)
 general,constants,gravitational_constant,6.67e-11,m^3/(kg*s^2)
@@ -179,9 +179,9 @@ logistics,robotarm,volume,0.2,m^3
 logistics,bagging,volume,12.0,m^3
 logistics,nipper,volume,0.36,m^3
 general,habitat,inflatable_mass,17787.967,kg
-general,habitat,inflatable_volume,15.04,m3
+general,habitat,inflatable_volume,15.041,m3
 general,habitat,inflatable_mass,17787.967,kg
-general,habitat,inflatable_volume,15.040999999999999,m3
+general,habitat,inflatable_volume,15.041,m3
 general,habitat,inflatable_mass,15843.805,kg
 general,habitat,inflatable_volume,15.04,m3
 general,habitat,inflatable_mass,17787.967,kg
@@ -203,7 +203,7 @@ general,habitat,day_avg_power,29149.0,W
 general,habitat,night_avg_power,5179.0,W
 life_support,thermal,power_draw,480.0,W
 life_support,total_mass,total_ls_power,10627.0,W
-general,earth,gravity,9.806000000000001,m/s2
+general,earth,gravity,9.806,m/s2
 general,earth,radius,6371.0,km
 general,earth,mass,5.97e+24,kg
 general,earth,day,23.934,hrs
@@ -215,7 +215,7 @@ general,launch_system,superheavy_prop_capacity,3400000.0,kg
 general,launch_system,ch4_specific_impulse_vac,356.0,s
 general,launch_system,lh2lox_specific_impulse_vac,455.0,s
 general,launch_system,ariane_pl_mass,21600.0,kg
-general,earth,average_radius_soi,327025.86100000003,km
+general,earth,average_radius_soi,327025.861,km
 general,moon,average_radius_soi,36274.138,km
 general,moon,mass,7.34767e+22,kg
 general,moon,radius,1731.1,km

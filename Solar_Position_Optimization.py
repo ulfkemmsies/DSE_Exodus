@@ -156,7 +156,6 @@ class PVArrays():
 
         self.number_of_cells_parallel = self.total_number_of_cells/self.number_of_cells_series
         self.current_supply = self.number_of_cells_parallel*self.data.solar__cell_maxpower_current_bol/1000
-
         self.actual_number_of_cells = self.number_of_cells_parallel*self.number_of_cells_series
         self.actual_cell_width = self.number_of_cells_x*self.data.solar__cell_xdimension/1000
         self.actual_cell_height = self.number_of_cells_y*self.data.solar__cell_ydimension/1000
@@ -215,7 +214,6 @@ class PVArrays():
             self.front_cover_volume+self.back_cover_volume
         self.cell_volume = 0.1*self.panel_assembly_volume_total
         self.panel_assembly_volume_total = self.panel_assembly_volume_total+self.cell_volume
-        print(self.panel_assembly_volume_total)
 
         #assume solar flower is scissor like structure made from CFPR
         self.solarflower_rhombus_height = self.actual_cell_height/self.number_of_panels_per_tower
