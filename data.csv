@@ -62,8 +62,8 @@ logistics,athlete,velocity,0.83,m/s
 logistics,crane,mass,169.0,kg
 logistics,crane,operating_speed,60.0,s
 logistics,athlete,distance,2000.0,m
-logistics,crane,volume,0.85,m3
-logistics,athlete,volume,1.8,m3
+logistics,crane,volume,1.4,m3
+logistics,athlete,volume,27.6,m3
 logistics,athlete,volume_capacity,98.0,m^3
 financials,leo,init_demand,510.0,MT/yr
 financials,eml1,init_demand,552.0,MT/year
