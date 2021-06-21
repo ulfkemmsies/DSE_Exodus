@@ -7,6 +7,9 @@ class ThermalControl():
     def __init__(self):
         self.data = CommonData()
 
+        self.power_draw_MMAC = 240
+
+
         self.total_calc()
 
     def calculate_surface_length(self):
@@ -95,6 +98,22 @@ class ThermalControl():
         print("Internal heat day = ", self.internal_heat_day)
         print("Internal heat night = ", self.internal_heat_night)
 
+    def calculate_total_heat(self):
+
+        self.total_heat_day = self.internal_heat_day + self.heat_flow_day + 4 * self.astronaut_body_heat
+        self.total_heat_night = self.internal_heat_night + self.heat_flow_night + 4 * self.astronaut_body_heat
+
+        print("total heat day = ", self.total_heat_day)
+        print("total heat night = ", self.total_heat_night)
+
+    def calculate_thermal_power(self):
+
+        self.required_MMAC_units = 2
+
+        self.thermal_power_budget = self.required_MMAC_units * self.power_draw_MMAC
+
+        print("thermal power budget =", self.thermal_power_budget)
+
     def total_calc(self):
 
         self.calculate_surface_length()
@@ -106,6 +125,9 @@ class ThermalControl():
         self.calculate_heat_flow_day()
         self.calculate_body_heat()
         self.calculate_internal_heatgains()
+        self.calculate_total_heat()
+        self.calculate_thermal_power()
+
 
 Test = ThermalControl()
 print(Test)
