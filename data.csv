@@ -172,3 +172,9 @@ logistics,robotarm,number_needed,1.0,#
 logistics,bagging,number_needed,1.0,#
 logistics,nipper,number_needed,1.0,#
 logistics,bagging,filling_capacity,54.0,bags/day
+logistics,rassor,volume,1.2,m^3
+logistics,athlete,volume,27.6,m^3
+logistics,crane,volume,1.4,m^3
+logistics,robotarm,volume,0.2,m^3
+logistics,bagging,volume,12.0,m^3
+logistics,nipper,volume,0.36,m^3
