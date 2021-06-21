@@ -37,6 +37,7 @@ class PowerRelated():
     def calculate_hydrogen_energy(self):
 
         self.energy_needed = self.p_req_days * self.p_day_sec * self.p_power_required * self.p_eff_fuel_cell * self.p_safety_factor
+        self.h2_mass_en = self.energy_needed / self.p_h2_specific_energy
         self.h2_mass = self.energy_needed / self.p_h2_specific_energy + self.p_h2_life_support
         self.o2_mass = self.h2_mass * self.p_h2_o2_ratio + self.p_o2_life_support
         self.h2_volume = self.h2_mass / self.p_liquid_h2_density
