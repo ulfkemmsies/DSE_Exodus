@@ -29,13 +29,13 @@ general,habitat,radius,3.0,m
 general,habitat,floor_depth,1.0,m
 materials,regolith,thickness,1.0,m
 materials,regolith,total_volume,767.556,m3
-materials,regolith,total_mass,1151335.427,kg
+materials,regolith,total_mass,1151335.4270000001,kg
 materials,kevlar,thickness,0.0,m
-materials,kevlar,total_mass,949.233,kg
+materials,kevlar,total_mass,949.2330000000001,kg
 general,constants,stefan_boltzmann_constant,0.0,W/(m^2*K^4)
 general,constants,gas_constant,8.314,J/(K*mol)
 general,constants,gravitational_constant,0.0,m^3/(kg*s^2)
-materials,kevlar,total_mass,949.2330000000001,kg
+materials,kevlar,total_mass,949.233,kg
 general,constants,stefan_boltzmann_constant,5.67e-08,W/(m^2*K^4)
 general,constants,gas_constant,8.314462618,J/(K*mol)
 general,constants,gravitational_constant,6.67e-11,m^3/(kg*s^2)
@@ -197,7 +197,7 @@ general,habitat,day_avg_power,35270.0,W
 general,habitat,night_avg_power,6266.0,W
 life_support,thermal,power_draw,480.0,W
 life_support,total_mass,total_ls_power,10627.0,W
-general,earth,gravity,9.806,m/s2
+general,earth,gravity,9.806000000000001,m/s2
 general,earth,radius,6371.0,km
 general,earth,mass,5.97e+24,kg
 general,earth,day,23.934,hrs
@@ -209,7 +209,7 @@ general,launch_system,superheavy_prop_capacity,3400000.0,kg
 general,launch_system,ch4_specific_impulse_vac,356.0,s
 general,launch_system,lh2lox_specific_impulse_vac,455.0,s
 general,launch_system,ariane_pl_mass,21600.0,kg
-general,earth,average_radius_soi,327025.861,km
+general,earth,average_radius_soi,327025.86100000003,km
 general,moon,average_radius_soi,36274.138,km
 general,moon,mass,7.34767e+22,kg
 general,moon,radius,1731.1,km
@@ -220,7 +220,7 @@ general,moon,orbital_perimeter,2412742.219,km
 general,launch_system,starship_leo_height,500.0,km
 general,launch_system,llo_height,100.0,km
 power,power_storage,eff_fuel_cell,1.81,%
-life_support,total_mass,oxygen_mass,497.263,kg
+life_support,total_mass,oxygen_mass,497.26300000000003,kg
 power,power_storage,h2_tank_ref_propellant_mass,271.0,kg
 power,power_storage,h2_tank_ref_mass,449.0,kg
 power,power_storage,o2_tank_ref_propellant_mass,2168.0,kg
