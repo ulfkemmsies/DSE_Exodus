@@ -70,6 +70,11 @@ class Robots():
         self.data.bagging__number_needed = self.bagging_needed
         print("number of bagging robots needed", self.bagging_needed)
 
+    def main_outputs(self):
+        self.data.all_logistics__power_draw = self.data.bagging__number_needed * self.data.bagging__power_draw + self.data.athlete__number_needed * self.data.athlete__power_draw + self.data.crane__number_needed * self.data.crane__power_draw + self.data.rassor__number_needed * self.data.rassor__power_draw + self.data.nipper__number_needed * self.data.nipper__power_draw + self.data.robotarm__number_needed * self.data.robotarm__power_draw
+        self.data.all_logistics__total_mass = self.data.bagging__number_needed * self.data.bagging__mass + self.data.athlete__number_needed * self.data.athlete__mass + self.data.crane__number_needed * self.data.crane__mass + self.data.rassor__number_needed * self.data.rassor__mass + self.data.nipper__number_needed * self.data.nipper__mass + self.data.robotarm__number_needed * self.data.robotarm__mass
+        self.data.all_logistics__total_volume = self.data.bagging__number_needed * self.data.bagging__volume + self.data.athlete__number_needed * self.data.athlete__volume + self.data.crane__number_needed * self.data.crane__volume + self.data.rassor__number_needed * self.data.rassor__volume + self.data.nipper__number_needed * self.data.nipper__volume + self.data.robotarm__number_needed * self.data.robotarm__volume
+
     #To run all calculations, fill in the brackets for the time required: add all defs here
     def total_calc(self):
         self.rassor_amount_under_habitat(50)
@@ -77,6 +82,7 @@ class Robots():
         self.crane_calculations(350)
         self.transporter_calculations(10)
         self.bagging_calculations(277)
+        self.main_outputs()
 
 if __name__ == "__main__":
     Test = Robots()

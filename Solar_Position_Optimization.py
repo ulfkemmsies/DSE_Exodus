@@ -49,7 +49,7 @@ class PVArrays():
 
         self.voltage_required = 600 #V DC
 
-        self.power_required_nominal = 20 #kW #GET FROM GUI
+        self.power_required_nominal = 20 #kW 
         self.power_required_manufacturing = 75/(1-0.02)**2 #kW #taking into account a 2% degradation over two years #GET FROM GUI
         self.power_required = max(self.power_required_nominal,self.power_required_manufacturing)
 
@@ -59,6 +59,8 @@ class PVArrays():
 
         self.deployment_time_panels = 60 #s #ADD TO GUI
         self.deployment_time_sunflower = 60 #s #ADD TO GUI
+
+        self.data.code_finisher()
 
     def shadow(self,maxmin):
         self.inclination = np.deg2rad(5)  # radians
