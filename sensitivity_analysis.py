@@ -4,10 +4,6 @@ import scipy as sp
 from scipy import stats
 import matplotlib.pyplot as plt
 from commondata import CommonData
-from RobotScaling import Robots
-from Solar_Position_Optimization import PVArrays
-from structural_calculation import Structure
-from life_support import Life_Support
 from NPV_calc import discrete_cdf
 import unittest
 from bisect import bisect_left
