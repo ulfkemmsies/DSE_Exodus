@@ -21,10 +21,17 @@ class PowerRelated():
         self.p_o2_life_support = 495                # [kg] From life support
         self.p_h2_life_support = 267.47             # [kg]
         self.p_h2_o2_ratio = 7.94                   # []
-        
-        
+        self.p_h2_tank_ref_propellant_mass = 271    # [kg]
+        self.p_h2_tank_ref_mass = 449               # [kg]
+        self.p_o2_tank_ref_propellant_mass = 2168   # [kg]
+        self.p_o2_tank_ref = 258                    # [kg]
+        self.p_tank_topoff_factor = 1.05            # [] You can never fill a tank 100% 
+        self.p_inn_tank_radius = 1.0                # [m] Inner tank radius
+        self.p_outer_tank_radius = 1.2              # [m] Outer tank radius   
+
         self.total_calc()
 
+#calculate the total mass and volume of h2 and o2 needed
     def calcucalculate_hydrogen_energy(self):
 
         self.energy_needed = self.p_req_days * self.p_day_sec * self.p_power_required * self.p_eff_fuel_cell * self.p_safety_factor
@@ -36,31 +43,29 @@ class PowerRelated():
         print("h2 mass", self.h2_mass, "h2 volume", self.h2_volume)
         print("o2 mass", self.o2_mass, "o2 volume", self.o2_volume)
 
+#Calculate the mass of the hydrogen and oxygen tanks based on 1989 nasa study
     def tank_mass (self):
+        self.h2_tank.mass = (self.h2_mass * self.p_h2_tank_ref_mass)/ self.p_h2_tank_ref_propellant_mass
+        self.o2_tank.mass = (self.o2_mass * self.p_o2_tank_ref_mass)/ self.p_o2_tank_ref_propellant_mass
 
-        self.radial_stress = self.data.habitat__internal_pressure * self.data.habitat__radius / self.inflatable_thickness
-        self.longitudinal_stress = self.radial_stress / 2
-        self.shear_stress = self.radial_stress / 4
+        print("h2 tank mass", self.h2_tank.mass)
+        print("o2 tank mass", self.o2_tank.mass)
 
-        self.stress_safety = self.radial_stress * self.safety_factor
-        print("shear", self.shear_stress)
-        print(self.stress_safety)
+# calculate the volume dimension of the h2 and o2 tank
+    def calculate_tank_volume(self):
+        self.h2.tank_volume = self.h2_volume * self.p_tank_topoff_factor # +5%
+        self.o2.tank_volume = self.o2_volume * self.p_tank_topoff_factor # +5%
+        self.h2_tank_height = self.h2.tank_volume/(3.1415*self.p_inn_tank_radius^2)
+        self.o2_tank_height = self.o2.tank_volume/(3.1415*self.p_inn_tank_radius^2)
+        self.h2_tank_volume_total = 3.1415 * self.p_outer_tank_radius^2 * self.h2_tank_height
+        self.o2_tank_volume_total = 3.1415 * self.p_outer_tank_radius^2 * self.o2_tank_height
+        
+        print("h2 tank height", self.h2_tank_height)
+        print("o2 tank height", self.o2_tank_height)
+        print("tank radius", self.p_outer_tank_radius)
+        print("h2 tank total tank volume", self.h2_tank_volume_total)    
+        print("o2 tank total tank volume", self.o2_tank_volume_total)    
 
-    def calculate_inflatable_mass(self):
-
-        self.dimension = 2 * m.pi * self.data.habitat__radius * self.data.habitat__length + \
-            2 * m.pi * (self.data.habitat__radius) ** 2
-
-        self.mass_insulation = self.dimension * self.t_insulation * self.data.layers__density_insulation
-        self.mass_bladder = self.dimension * self.t_bladder * self.data.layers__density_bladder
-        self.mass_lining = self.dimension * self.t_lining * self.data.layers__density_lining
-        self.mass_radiation = self.dimension * self.t_radiation * self.data.layers__density_radiation
-        self.mass_restraint = self.dimension * self.t_restraint * self.data.layers__density_restraint
-
-        self.inflatable_mass = self.mass_insulation + self.mass_lining + self.mass_bladder + self.mass_restraint + \
-            self.mass_radiation
-
-        print("Inflatable mass:", self.inflatable_mass)
 
     def total_calc(self):
         self.calculate_inflatable_properties()
@@ -68,16 +73,6 @@ class PowerRelated():
         self.calculate_inflatable_mass()
 
 
-Test = StressRelated()
+Test = PowerRelated()
 print(Test)
 
-# class UnitTest(unittest.TestCase):
-
-    #def SetUp(self):
-    #    self.Test_Struc = set up unit value scenario
-
-    #def test_inflatable_thickness(self):
-        #self.assertEqual(truncate(self.Test_Struc.inflatable_thickness, 2), 0.010)
-
-#if __name__ == '__main__':
-#    unittest.main()
