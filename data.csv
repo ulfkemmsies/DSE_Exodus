@@ -207,3 +207,13 @@ general,earth,gravity,9.80665,m/s2
 general,earth,radius,6371.0,km
 general,earth,mass,5.97e+24,kg
 general,earth,day,23.9345,hrs
+general,earth,gravity,9.80665,m/s2
+general,launch_system,starship_dry_mass,130000.0,kg
+general,launch_system,superheavy_dry_mass,300000.0,kg
+general,launch_system,starship_prop_capacity,1200000.0,kg
+general,launch_system,superheavy_prop_capacity,3400000.0,kg
+general,launch_system,ch4_specific_impulse_vac,356.0,s
+general,launch_system,lh2lox_specific_impulse_vac,455.0,s
+general,launch_system,ariane_pl_mass,21600.0,kg
+general,earth,average_radius_soi,327025.8611,km
+general,moon,average_radius_soi,36274.1389,km
