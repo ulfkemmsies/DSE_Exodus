@@ -155,7 +155,7 @@ general,moon,shadow_temp_day,290.0,K
 general,habitat,heat_transmission_coefficient,8.31,W/(m^2*K)
 materials,regolith,heat_radiation_dose,5.0,W/(m^2*K)
 materials,layers,thickness_insulation,0.005,m
-materials,layers,insulation_thermal_conductivity,0.137,W/(m*K)
+materials,layers,insulation_thermal_conductivity,0.136,W/(m*K)
 materials,regolith,subsurface_thermal_conductivity,0.01,W/(m*K)
 logistics,rassor,number_needed,4.0,#
 logistics,athlete,number_needed,2.0,#
@@ -178,3 +178,8 @@ logistics,crane,volume,1.4,m^3
 logistics,robotarm,volume,0.2,m^3
 logistics,bagging,volume,12.0,m^3
 logistics,nipper,volume,0.36,m^3
+general,habitat,inflatable_mass,17787.967,kg
+general,habitat,inflatable_volume,15.041,m3
+logistics,all_logistics,total_mass,6237.0,kg
+logistics,all_logistics,total_volume,75.36,m3
+logistics,all_logistics,power_draw,55300.0,W

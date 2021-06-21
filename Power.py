@@ -9,22 +9,22 @@ class PowerRelated():
 
         self.regolith_weight = self.data.regolith__total_mass * self.data.moon__gravity
 
-        self.p_power_required = 6.3                 # [kW] Power required from life support
+        self.p_power_required = 6300                # [W] Power required from life support Dependent
         self.p_day_sec = 86400                      # [sec]
-        self.p_eff_fuel_cell = 1.81                 # [] Uncertain!          
+        self.p_eff_fuel_cell = 1.81                 # [] 55% Uncertain!          
         self.p_safety_factor = 1.25                 # [] Safety factor 
         self.p_req_days = 18                        # [days]
         self.p_h2_specific_energy = 120000000       # [J/kg]
         self.p_liquid_h2_density = 71               # [kg/m3]
         self.p_h2_specific_vol_energy = 8520000000  # [J/m3]         
-        self.p_liquid_o2_density = 1141             # [kg/m3] From life support
-        self.p_o2_life_support = 495                # [kg] From life support
-        self.p_h2_life_support = 267.47             # [kg]
+        self.p_liquid_o2_density = 1141             # [kg/m3] 
+        self.p_o2_life_support = 495                # [kg] From life support Dependent
+        self.p_h2_life_support = 267.47             # [kg] Dependent
         self.p_h2_o2_ratio = 7.94                   # []
-        self.p_h2_tank_ref_propellant_mass = 271    # [kg]
-        self.p_h2_tank_ref_mass = 449               # [kg]
-        self.p_o2_tank_ref_propellant_mass = 2168   # [kg]
-        self.p_o2_tank_ref = 258                    # [kg]
+        self.p_h2_tank_ref_propellant_mass = 271    # [kg] Uncertain
+        self.p_h2_tank_ref_mass = 449               # [kg] Uncertain
+        self.p_o2_tank_ref_propellant_mass = 2168   # [kg] Uncertain
+        self.p_o2_tank_ref = 258                    # [kg] Uncertain
         self.p_tank_topoff_factor = 1.05            # [] You can never fill a tank 100% 
         self.p_inn_tank_radius = 1.0                # [m] Inner tank radius
         self.p_outer_tank_radius = 1.2              # [m] Outer tank radius   
