@@ -11,6 +11,7 @@ class ThermalControl():
 
 
         self.total_calc()
+        self.data.code_finisher()
 
     def calculate_surface_length(self):
 
