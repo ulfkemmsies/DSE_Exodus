@@ -38,6 +38,7 @@ class Life_Support():
         self.leaked_ox = self.ox_mass_ratio*self.data.gas_storage__leakage_rate*365
         self.leaked_nitro = (1-self.ox_mass_ratio)*self.data.gas_storage__leakage_rate*365
         self.total_ox = (self.ox_volume_fill+self.lost_ox+self.leaked_ox)*1.25
+        self.data.total_mass__oxygen_mass = self.total_ox
         self.total_nitro = (self.nitro_volume_fill+self.lost_nitro+self.leaked_nitro)*1.25
         return self.total_ox+self.total_nitro
      
