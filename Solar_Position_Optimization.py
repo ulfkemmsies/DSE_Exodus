@@ -193,7 +193,6 @@ class PVArrays():
         self.outer_support_volume = (2*self.actual_cell_width*(self.outer_support_beam_thickness/1000)**2\
         +2*self.actual_cell_height*(self.outer_support_beam_thickness/1000)**2)
         self.outer_support_mass = self.outer_support_volume*self.support_material_density
-
         self.inner_support_volume = self.inner_support_beam_width*self.inner_support_beam_thickness/(1000**2)\
         *((self.number_of_cells_x-1)*self.actual_cell_height+(self.number_of_cells_y-1)*self.actual_cell_width)
         self.inner_support_mass = self.inner_support_volume*self.support_material_density
@@ -203,7 +202,6 @@ class PVArrays():
 
         self.back_cover_volume = self.actual_cell_width*self.actual_cell_height*self.back_cover_thickness/1000
         self.back_cover_mass = self.back_cover_volume*self.back_cover_material_density
-
         self.panel_assembly_mass_total = self.tower_cell_mass+self.outer_support_mass+self.inner_support_mass\
         +self.front_cover_mass+self.back_cover_mass
         self.hinge_mass = 0.1*self.panel_assembly_mass_total
@@ -213,6 +211,7 @@ class PVArrays():
             self.front_cover_volume+self.back_cover_volume
         self.cell_volume = 0.1*self.panel_assembly_volume_total
         self.panel_assembly_volume_total = self.panel_assembly_volume_total+self.cell_volume
+        print(self.panel_assembly_volume_total)
 
         #assume solar flower is scissor like structure made from CFPR
         self.solarflower_rhombus_height = self.actual_cell_height/self.number_of_panels_per_tower
@@ -227,11 +226,10 @@ class PVArrays():
         self.solarflower_mass = self.solarflower_volume*self.back_cover_material_density
         self.solarflower_aux_system_mass = 0.1*self.solarflower_mass
         self.solarflower_mass = self.solarflower_mass+self.solarflower_aux_system_mass
-
         self.solartower_total_mass = (self.solarflower_mass+self.panel_assembly_mass_total)*self.safety_factor_structures
         self.solartower_total_volume = (self.solarflower_volume+self.panel_assembly_volume_total)*self.safety_factor_structures
 
-        self.total_solarfarm_mass = self.solartower_total_mass*self.number_of_towers
+        self.total_solarfarm_mass = self.solartower_total_mass*self.number_of_towers+self.cable_weight
         self.total_solarfarm_volume = self.solartower_total_volume*self.number_of_towers
 
         print("Total mass of single solar tower: ", self.solartower_total_mass, "kg")
@@ -258,8 +256,8 @@ class PVArrays():
         #power required for solar panels erection
         self.power_req_solarpanels = self.energy_req_solarpanels/self.deployment_time_panels
 
-        self.total_solarfarm_set_up_time = self.travel_time+self.internal_length/self.data.athlete__velocity+\
-            self.number_of_towers*(self.deployment_time_panels+self.deployment_time_sunflower)
+        self.total_solarfarm_set_up_time = self.travel_time+self.internal_length/(self.data.athlete__velocity/4)+\
+            self.number_of_towers*(self.deployment_time_panels+self.deployment_time_sunflower)*2
 
         self.total_power_needed = self.data.athlete__power_draw*2+self.data.crane__power+\
         self.power_req_solarpanels+self.power_req_solarflower

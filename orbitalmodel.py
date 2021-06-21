@@ -7,6 +7,7 @@ Author: Ernesto Hof
 import numpy as np
 import math as m
 from commondata import CommonData
+import matplotlib.pyplot as plt
 
 class orbit():
     def __init__(self):
@@ -43,7 +44,7 @@ class orbit():
         self.superheavydry = self.data.launch_system__superheavy_dry_mass
         self.starshipfuel = self.data.launch_system__starship_prop_capacity
         self.superheavyfuel = self.data.launch_system__superheavy_prop_capacity
-        self.starship_PL = 26000
+        self.starship_PL = 43948
         self.methaneIsp = self.data.launch_system__ch4_specific_impulse_vac
         self.hydrogenIsp = self.data.launch_system__lh2lox_specific_impulse_vac
 
@@ -85,9 +86,6 @@ class orbit():
             self.deltaV_lunar_inclination+self.deltaV_LLO_circulization+self.deltaV_lunar_landing
 
     def propellantmass(self, starship, ariane):
-        if ariane==True:
-            starship=False
-
         if starship == True:
             self.dry = self.starshipdry
             self.PL = self.starship_PL
@@ -98,6 +96,7 @@ class orbit():
             self.dry = self.ariane_structural_coeff*self.PL
             self.Isp = self.hydrogenIsp
 
+        print(self.PL, self.dry)
         self.Epropmass_lunar_landing = m.exp(self.deltaV_lunar_landing/(self.g0*self.Isp))*\
             (self.dry+self.PL)-self.dry-self.PL
         self.Epropmass_LLO_circulization = m.exp(self.deltaV_LLO_circulization/(self.g0*self.Isp))*\
@@ -133,6 +132,8 @@ class orbit():
 
         self.totalpropmass_earth_journey = self.Lpropmass_earth_entry+self.Lpropmass_moon_exit+self.Lpropmass_LLO_inclination+\
             self.Lpropmass_lunarhohmann+self.Lpropmass_lunar_launch
+
+        return self.totalpropmass_earth_journey
 
     def transfertime(self):
         self.propellantmass(True, False)
@@ -174,6 +175,7 @@ class orbit():
               "\nLLO Height: ", self.LLO_height, "km",
               "\nLLO Radius: ", self.LLO_radius, "km",
               "\n-------------------------------DeltaV------------------------------------\n",
+              "\n Payload Mass: ", self.PL, "kg",
               "\n Earth Exit: ", self.deltaV_earth_exit, "m/s",
               "\n Propellant Needed: ", self.Epropmass_earth_exit, "kg",
               "\n Lunar SOI Entry: ", self.deltaV_lunar_entry, "m/s",
@@ -187,10 +189,11 @@ class orbit():
               "\n-------------------------------------------------------------------------\n",
               "\n Total Mission DeltaV Budget: ", self.total_deltaV, "m/s",
               "\n Total Propellant Required (Refuel in LEO): ", self.totalpropmass_moon_journey, "kg",
-              "\n Total Transfer Time: ", self.total_transfer_time, "min or", self.total_transfer_time/(24*60), "days")
+              "\n Total Transfer Time: ", self.total_transfer_time, "min or", self.total_transfer_time/(24*60), "days",
+              "\n Number of Refills Needed in LEO: ", self.LEO_revolutions-1)
 
 Test = orbit()
-Test.program(True, False)
+Test.program(False, True)
 
 
 
