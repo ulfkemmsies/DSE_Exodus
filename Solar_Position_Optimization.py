@@ -49,16 +49,16 @@ class PVArrays():
 
         self.voltage_required = 600 #V DC
 
-        self.power_required_nominal = 20 #kW
-        self.power_required_manufacturing = 75/(1-0.02)**2 #kW #taking into account a 2% degradation over two years
+        self.power_required_nominal = 20 #kW #GET FROM GUI
+        self.power_required_manufacturing = 75/(1-0.02)**2 #kW #taking into account a 2% degradation over two years #GET FROM GUI
         self.power_required = max(self.power_required_nominal,self.power_required_manufacturing)
 
         self.distance_landing_habitat = 1.9 #km
         self.distance_habitat_solar = 1.9 #km
         self.actual_distance_landing_habitat = 2.5 #km\
 
-        self.deployment_time_panels = 60 #s
-        self.deployment_time_sunflower = 60 #s
+        self.deployment_time_panels = 60 #s #ADD TO GUI
+        self.deployment_time_sunflower = 60 #s #ADD TO GUI
 
     def shadow(self,maxmin):
         self.inclination = np.deg2rad(5)  # radians
@@ -182,8 +182,8 @@ class PVArrays():
             #print("ADD FINAL CABLE MANUALLY TO MASS AND VOLUME")
             
         print("Total High-Power cable length: ", self.total_length, " m")
-        print("Total cable weight: ", self.cable_weight, "kg")
-        print("Total cable volume: ", self.cable_volume, "m3")
+        print("Total cable weight: ", self.cable_weight, "kg") #ADD TO GUI
+        print("Total cable volume: ", self.cable_volume, "m3") #ADD TO GUI
         print("Total transmission losses: ", self.transmission_loss, "W")
 
     def PVmass(self):
@@ -236,8 +236,8 @@ class PVArrays():
 
         print("Total mass of single solar tower: ", self.solartower_total_mass, "kg")
         print("Total volume of single solar tower: ", self.solartower_total_volume, "m3")
-        print("Total mass of entire solar farm: ", self.total_solarfarm_mass, "kg")
-        print("Total volume of entire solar farm: ", self.total_solarfarm_volume, "m3")
+        print("Total mass of entire solar farm: ", self.total_solarfarm_mass, "kg") #ADD TO GUI
+        print("Total volume of entire solar farm: ", self.total_solarfarm_volume, "m3") #ADD TO GUI
 
     def PVsetupenergy(self):
         self.number_of_trips = max(m.ceil((self.total_solarfarm_mass+self.cable_weight)/self.data.athlete__mass_capacity)/2,1)
@@ -268,11 +268,11 @@ class PVArrays():
             self.energy_req_crane
 
         print("Total travel time from landing site to solar farm position: ", self.travel_time/60, "minutes")
-        print("Power required for solar tower erection: ",self.total_power_needed)
-        print("Total time to set up the solar farm: ", self.total_solarfarm_set_up_time/60, "minutes")
+        print("Power required for solar tower erection: ",self.total_power_needed) 
+        print("Total time to set up the solar farm: ", self.total_solarfarm_set_up_time/60, "minutes") #ADD TO GUI
         print("Energy needed for the erection of one solar tower: ", self.energy_req_solarpanels+self.energy_req_solarpanels+self.energy_req_crane, "J")
         print("Total energy needed to set up solar farm before being self-sustaining: ", self.total_energy_needed/1000, "kJ")
-        print("Power required to set up solar farm: ", 4000+self.power_req_solarflower+self.power_req_solarpanels, "W")
+        print("Power required to set up solar farm: ", 4000+self.power_req_solarflower+self.power_req_solarpanels, "W") #ADD TO GUI
 
 
     def plotting(self):
