@@ -35,7 +35,7 @@ materials,kevlar,total_mass,949.233,kg
 general,constants,stefan_boltzmann_constant,0.0,W/(m^2*K^4)
 general,constants,gas_constant,8.314,J/(K*mol)
 general,constants,gravitational_constant,0.0,m^3/(kg*s^2)
-materials,kevlar,total_mass,949.2330000000001,kg
+materials,kevlar,total_mass,949.233,kg
 general,constants,stefan_boltzmann_constant,5.67e-08,W/(m^2*K^4)
 general,constants,gas_constant,8.314462618,J/(K*mol)
 general,constants,gravitational_constant,6.67e-11,m^3/(kg*s^2)
@@ -178,5 +178,5 @@ logistics,crane,volume,1.4,m^3
 logistics,robotarm,volume,0.2,m^3
 logistics,bagging,volume,12.0,m^3
 logistics,nipper,volume,0.36,m^3
-general,habitat,inflatable_mass,15843.805,kg
+general,habitat,inflatable_mass,17787.967,kg
 general,habitat,inflatable_volume,15.041,m3
