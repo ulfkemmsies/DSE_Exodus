@@ -8,7 +8,7 @@ class Life_Support():
         
         self.data = CommonData()
         self.total_calc()
-        self.data.code_finisher()
+        # self.data.code_finisher()
 
     def water_calc(self):
         self.urine_and_flush_mass = 2.0
