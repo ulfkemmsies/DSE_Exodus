@@ -24,7 +24,7 @@ class Robots():
 
         #place holder values required
         self.bagsize = 500 # [L] bagsize 
-        self.underneathhabitat = 83.7*self.data.regolith__density #[m3] volume under habitat
+        self.underneathhabitat = 150.366*self.data.regolith__density #[m3] volume under habitat
         self.number_of_trips_2habitat = 100
         self.safetyfactor_underhabitat = 0.5
         self.safetyfactor_at_excavation = 0.6
@@ -101,7 +101,7 @@ class Robottests(unittest.TestCase):
         self.assertAlmostEqual(self.example.bagging_needed, 27)
 
 if __name__ == "__main__":
-    RunProgramm = Robots(50,317,350,10,118)
+    RunProgramm = Robots(84,317,350,10,118)
     
     # unittest.main()
     # Test.excavation_time_underneath()
