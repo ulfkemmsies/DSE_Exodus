@@ -160,3 +160,15 @@ materials,regolith,subsurface_thermal_conductivity,0.01,W/(m*K)
 logistics,rassor,number_needed,4.0,#
 logistics,athlete,number_needed,2.0,#
 logistics,crane,number_needed,2.0,#
+logistics,robotarm,power_draw,500.0,W
+logistics,bagging,mass,710.0,kg
+logistics,nipper,mass,200.0,kg
+logistics,robotarm,mass,45.0,kg
+logistics,bagging,power_draw,5800.0,w
+logistics,nipper,power_draw,800.0,W
+logistics,crane,power_draw,500.0,W
+logistics,rassor,power_draw,10800.0,W
+logistics,robotarm,number_needed,1.0,#
+logistics,bagging,number_needed,1.0,#
+logistics,nipper,number_needed,1.0,#
+logistics,bagging,filling_capacity,54.0,bags/day

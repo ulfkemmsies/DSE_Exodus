@@ -63,15 +63,24 @@ class Robots():
 
         print("Number of transporters required", self.transporters_needed)
 
+    #Calculations bagging system
+    def bagging_calculations(self, time):
+        self.number_of_bags = (self.data.regolith__total_volume*1000) / self.bagsize
+        self.bagging_needed = m.ceil(self.number_of_bags/(self.data.bagging__filling_capacity * time))
+        self.data.bagging__number_needed = self.bagging_needed
+        print("number of bagging robots needed", self.bagging_needed)
+
     #To run all calculations, fill in the brackets for the time required: add all defs here
     def total_calc(self):
         self.rassor_amount_under_habitat(50)
         self.rassor_amount_at_excavationloc(277)
         self.crane_calculations(350)
         self.transporter_calculations(10)
+        self.bagging_calculations(277)
 
 if __name__ == "__main__":
     Test = Robots()
     # Test.excavation_time_underneath()
 
-    print(Test.bagsize)
+    #print(Test.bagsize)
+
