@@ -89,27 +89,21 @@ class Robots():
         self.bagging_calculations()
 
 
-class UnitTest(unittest.TestCase):
+class Robottests(unittest.TestCase):
 
-    def SetUp(self):
-        self.Testcase = Robots(10,10,1,10,1)
+    def setUp(self):
+        self.example = Robots(10,10,1,10,1)
         
     def test_inflatable_thickness(self):
-        self.assertAlmostEqual(self.Testcase.rassor_uh_robots_needed, 10)
-        self.assertAlmostEqual(self.Testcase.rassor_ae_robots_needed, 59)
-        self.assertAlmostEqual(self.Testcase.cranes_needed, 2)
-        self.assertAlmostEqual(self.Testcase.bagging_needed, 27)
-
-        self.rassor_amount_under_habitat(50)
-        self.rassor_amount_at_excavationloc(277)
-        self.crane_calculations(350)
-        self.transporter_calculations(10)
-        self.bagging_calculations(277)
-        self.main_outputs()
+        self.assertAlmostEqual(self.example.rassor_uh_robots_needed, 10)
+        self.assertAlmostEqual(self.example.rassor_ae_robots_needed, 59)
+        self.assertAlmostEqual(self.example.cranes_needed, 2)
+        self.assertAlmostEqual(self.example.bagging_needed, 27)
 
 if __name__ == "__main__":
-    RunProgramm = Robots(50,277,350,10,277)
-    unittest.main()
+    RunProgramm = Robots(50,293,350,10,277)
+    
+    # unittest.main()
     # Test.excavation_time_underneath()
 
     #print(Test.bagsize)
