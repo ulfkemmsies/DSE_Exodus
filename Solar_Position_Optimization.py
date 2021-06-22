@@ -62,7 +62,7 @@ class PVArrays():
         self.box_dimensions = [3.5,2,0.5]
 
         self.runprogram('max',False)
-        self.data.code_finisher()
+        # self.data.code_finisher()
 
     def shadow(self,maxmin):
         self.inclination = np.deg2rad(5)  # radians
@@ -242,13 +242,13 @@ class PVArrays():
 
         #print("Total mass of single solar tower: ", self.solartower_total_mass, "kg")
         #print("Total volume of single solar tower: ", self.solartower_total_volume, "m3")
-        print("Total mass of entire solar farm: ", self.total_solarfarm_mass, "kg") #ADD TO GUI
+        # print("Total mass of entire solar farm: ", self.total_solarfarm_mass, "kg") #ADD TO GUI
         self.data.solar__total_farm_mass = self.total_solarfarm_mass
         # print("Total volume of entire solar farm: ", self.total_solarfarm_volume, "m3") #ADD TO GUI
         self.data.solar__total_farm_volume = self.total_solarfarm_volume
-        print("Habitat-Solar Cable Weight: ", self.habitatsolar_cable_weight, "kg")
-        print("Habitat-Solar Cable Volume: ", self.habitatsolar_cable_volune, "kg")
-        print("ONLY THIS MASS AND VOLUME IS EXCLUDED IN THE TOTAL SOLAR FARM MASS AS IT'S PACKED SEPERATELY IN THE LV")
+        # print("Habitat-Solar Cable Weight: ", self.habitatsolar_cable_weight, "kg")
+        # print("Habitat-Solar Cable Volume: ", self.habitatsolar_cable_volune, "kg")
+        # print("ONLY THIS MASS AND VOLUME IS EXCLUDED IN THE TOTAL SOLAR FARM MASS AS IT'S PACKED SEPERATELY IN THE LV")
 
         self.data.solar__total_mass = self.total_solarfarm_mass + self.habitatsolar_cable_weight
         self.data.solar__total_volume = self.total_solarfarm_volume + self.habitatsolar_cable_volune

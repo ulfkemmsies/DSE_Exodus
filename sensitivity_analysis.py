@@ -19,6 +19,11 @@ from structural_v2 import StressRelated
 from thermal_calculations import ThermalControl
 from Power import PowerRelated
 
+def name_cleaner(entry):
+    out = entry.replace("_distro", "")
+    out = out.replace("_", " ")
+    out = out.capitalize()
+    return out
 
 
 class Anal_Sensitivity():
@@ -28,15 +33,18 @@ class Anal_Sensitivity():
         self.df = self.data.df
         self.get_vars()
 
-        self.var_list = ['water_recovery__upa_recovery', 'water_recovery__wpa_recovery','gas_storage__airlock_cycles' ,'gas_storage__leakage_rate' , 'total_mass__ls_mass_excluding_water_and_gas', 'total_mass__total_ls_power', 'habitat__day_peak_power','habitat__night_avg_power','habitat__airlock_volume','habitat__safehouse_mass','habitat__safehouse_volume','habitat__extra_cargo_volume','habitat__extra_cargo_mass','rassor__power_draw','athlete__power_draw','robotarm__power_draw','bagging__power_draw', 'nipper__power_draw','solar__average_cell_weight', 'cell_avg_efficiency', 'power_storage__eff_fuel_cell', 'power_storage__life_support_h2_needed', 'power_storage__h2_tank_ref_propellant_mass', 'power_storage__h2_tank_ref_mass', 'power_storage__o2_tank_ref_propellant_mass', 'power_storage__o2_tank_ref', 'habitat__cylinders_mass', 'all_logistics__docking_station', 'all_logistics__internal_transporter_mass', 'habitat__cylinders_volume' , 'all_logistics__internal_transporter_volume']
+        self.var_list = ['gas_storage__airlock_cycles' , 'total_mass__ls_mass_excluding_water_and_gas', 'total_mass__total_ls_power', 'habitat__day_peak_power','habitat__night_avg_power','habitat__airlock_volume','habitat__safehouse_mass','habitat__safehouse_volume','habitat__extra_cargo_volume','habitat__extra_cargo_mass','rassor__power_draw','athlete__power_draw','robotarm__power_draw','bagging__power_draw', 'nipper__power_draw','solar__average_cell_weight', 'power_storage__life_support_h2_needed', 'power_storage__h2_tank_ref_propellant_mass', 'power_storage__h2_tank_ref_mass', 'power_storage__o2_tank_ref_propellant_mass', 'power_storage__o2_tank_ref', 'habitat__cylinders_mass', 'all_logistics__docking_station', 'all_logistics__internal_transporter_mass', 'habitat__cylinders_volume' , 'all_logistics__internal_transporter_volume']
 
         self.mass_var_list = ['total_mass__total_ls_mass', 'habitat__inflatable_mass', 'all_logistics__total_mass', 'solar__total_mass', 'power_storage__total_mass', 'total_mass__total_ls_mass', 'habitat__safehouse_mass', 'habitat__extra_cargo_mass', 'habitat__cylinders_mass', 'all_logistics__docking_station', 'all_logistics__internal_transporter_mass']
         self.volume_var_list = ['habitat__airlock_volume', 'habitat__safehouse_volume', 'habitat__inflatable_volume', 'all_logistics__total_volume', 'solar__total_volume', 'power_storage__total_volume', 'total_mass__total_volume', 'habitat__extra_cargo_volume', 'habitat__cylinders_volume' , 'all_logistics__internal_transporter_volume']
         self.power_var_list = ['all_logistics__power_draw']
 
-        self.trials = 500
+        self.trials = 5000
         
-        self.total_calc()
+        self.vars_to_pdf(self.var_list)
+
+        self.print_all_distros(self.trials)
+        # self.total_calc()
 
     def get_vars(self, key_list=None):
         keys = list(self.data.__dict__.keys())
@@ -80,13 +88,13 @@ class Anal_Sensitivity():
     
         total_mass = sum([float(getattr(self.data, key)) for key in self.mass_var_list])
         total_volume = sum(list(float(getattr(self.data, key)) for key in self.volume_var_list))
-        max_power = sum(list(float(getattr(self.data, key)) for key in self.power_var_list))
+        # max_power = sum(list(float(getattr(self.data, key)) for key in self.power_var_list))
 
-        print("Total Mass: ",total_mass)
-        print("Total volume: ",total_volume)
-        print("Construction Power Draw: ",max_power)
+        # print("Total Mass: ",total_mass)
+        # print("Total volume: ",total_volume)
+        # print("Construction Power Draw: ",max_power)
 
-        return total_mass, total_volume, max_power
+        return total_mass, total_volume
 
     def converger(self, var_list=None):
         
@@ -238,14 +246,14 @@ class Anal_Sensitivity():
         plt.grid(True, which='both', color='black', linestyle="--", linewidth=0.5, alpha=0.2)
         plt.minorticks_on()
 
-        # title = name_cleaner(title)
+        title = name_cleaner(title)
         plt.title(f"{title}\n")
 
         plt.tight_layout()
 
         plt.legend()
-        # plt.savefig(fname=f"distro_plots/{title}.jpeg", dpi=300)
-        plt.show()
+        plt.savefig(fname=f"distro_plots/{title}.jpeg", dpi=300)
+        # plt.show()
         
 
         plt.close(fig)
@@ -260,23 +268,23 @@ class Anal_Sensitivity():
 
         for i in range(self.trials):
 
-            total_mass, total_volume, max_power = self.sample_calc(self.var_list)
+            total_mass, total_volume = self.sample_calc(self.var_list)
 
             mass_results[i] = total_mass
             volume_results[i] = total_volume
-            power_results[i] = max_power
+            # power_results[i] = max_power
 
             print(f"Successfully calculated {i}-th sample!")
 
         mass_results = mass_results[mass_results != 0]
         volume_results = volume_results[volume_results != 0]
-        power_results = power_results[power_results != 0]
+        # power_results = power_results[power_results != 0]
 
         print(time.time() - t0, "seconds")
 
-        self.print_output(mass_results, title="Total Mass Probability Distribution", x_axis="kg", y_axis="Relative Frequency", min= 70000, max= 100000)
-        self.print_output(volume_results, title="Total Volume Probability Distribution", x_axis="m3", y_axis="Relative Frequency", min= 250, max=650)
-        self.print_output(power_results, title="Maximum Power Probability Distribution", x_axis="W", y_axis="Relative Frequency", min= 20000, max= 60000)
+        self.print_output(mass_results, title="Total Mass Probability Distribution", x_axis="kg", y_axis="Relative Frequency", max= 100000)
+        self.print_output(volume_results, title="Total Volume Probability Distribution", x_axis="m3", y_axis="Relative Frequency", max=366)
+        # self.print_output(power_results, title="Maximum Power Probability Distribution", x_axis="W", y_axis="Relative Frequency", min= 20000, max= 60000)
 
     def print_output(self, in_arr, title=None, x_axis=None, y_axis=None, min=None, max=None):
 
@@ -320,7 +328,7 @@ class Anal_Sensitivity():
         if max != None:
             ax.axvline(x=max, color="black", ls='-', alpha=0.8, label=f"Maximum: {format(max,'.1E')}\nMax CDF: {format(cdf(max),'.1E')}")
 
-        ax.hist(r, density=True, histtype='stepfilled', alpha=0.5, bins=100, label=f"{self.trials} samples\nBounded Prob. {cdf(max)-cdf(min)}")
+        ax.hist(r, density=True, histtype='stepfilled', alpha=0.5, bins=100, label=f"{self.trials} samples")
 
         plt.grid(True, which='both', color='black', linestyle="--", linewidth=0.5, alpha=0.2)
         plt.minorticks_on()

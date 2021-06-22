@@ -185,12 +185,12 @@ logistics,all_logistics,total_volume,75.36,m3
 logistics,all_logistics,power_draw,55300.0,W
 power,solar,farm_setup_time,471.452,min
 power,solar,farm_setup_power,4232.497,W
-power,solar,total_mass,18498.472,kg
-power,solar,total_volume,5.397,m3
+power,solar,total_mass,13643.252,kg
+power,solar,total_volume,35.932,m3
 power,solar,total_cable_mass,4855.219,kg
 power,solar,total_cable_volume,1.702,m3
-power,solar,total_farm_mass,13643.252,kg
-power,solar,total_farm_volume,3.695,m3
+power,solar,total_farm_mass,10983.252,kg
+power,solar,total_farm_volume,35.0,m3
 general,habitat,day_peak_power,45385.89,W
 general,habitat,night_peak_power,10627.0,W
 general,habitat,day_avg_power,35270.0,W
