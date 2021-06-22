@@ -44,7 +44,7 @@ class orbit():
         self.superheavydry = self.data.launch_system__superheavy_dry_mass
         self.starshipfuel = self.data.launch_system__starship_prop_capacity
         self.superheavyfuel = self.data.launch_system__superheavy_prop_capacity
-        self.starship_PL = 57597
+        self.starship_PL = 10000
         self.methaneIsp = self.data.launch_system__ch4_specific_impulse_vac
         self.hydrogenIsp = self.data.launch_system__lh2lox_specific_impulse_vac
 
@@ -133,6 +133,7 @@ class orbit():
         self.totalpropmass_earth_journey = self.Lpropmass_earth_entry+self.Lpropmass_moon_exit+self.Lpropmass_LLO_inclination+\
             self.Lpropmass_lunarhohmann+self.Lpropmass_lunar_launch
         self.additionalfuel_earth_journey = 0.1*self.totalpropmass_earth_journey
+        self.totalpropmass_earth_journey += self.additionalfuel_earth_journey
 
         return self.totalpropmass_earth_journey
 
@@ -194,8 +195,16 @@ class orbit():
         if starship==True:
             print("Number of Refills Needed in LEO: ", self.LEO_revolutions-1)
 
+        print(self.Lpropmass_lunar_launch)
+        print(self.Lpropmass_lunarhohmann+self.Lpropmass_LLO_inclination)
+        print(self.Lpropmass_moon_exit)
+        print(self.Lpropmass_earth_entry)
+        print(self.totalpropmass_earth_journey)
+        print(self.additionalfuel_earth_journey)
+
+
 Test = orbit()
-Test.program(False, True)
+Test.program(True, False)
 
 
 
