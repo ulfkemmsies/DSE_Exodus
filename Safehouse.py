@@ -10,7 +10,7 @@ class Safehouse():
         self.data = CommonData()
 
         #Just as a reminder to me:
-        # print(self.data.rassor__capacity) Dont forget!
+        # #print(self.data.rassor__capacity) Dont forget!
 
         #costants
         self.safehouse_radius = 164 # [cm]
@@ -45,7 +45,7 @@ class Safehouse():
 
         self.safehouse_total_weight = self.underground_weight+self.top_weight+self.endcaps_weight+self.bottom_rigid_weight+self.bottom_water_weight
 
-        print(self.safehouse_total_weight)
+        # print(self.safehouse_total_weight)
         self.data.habitat__safehouse_mass = self.safehouse_total_weight
 
 

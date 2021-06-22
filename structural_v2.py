@@ -20,7 +20,7 @@ class StressRelated():
         self.floor_width = 5.5
 
         self.total_calc()
-        self.data.code_finisher()
+        # self.data.code_finisher()
 
 
     def calculate_inflatable_properties(self):
@@ -34,7 +34,7 @@ class StressRelated():
         self.inflatable_thickness = \
             self.t_insulation + self.t_bladder * 3 + self.t_lining + self.t_radiation + self.t_restraint
 
-        print("inflatable thickness", self.inflatable_thickness)
+        #print("inflatable thickness", self.inflatable_thickness)
 
         self.t_ratio_insulation = self.t_insulation / self.inflatable_thickness
         self.t_ratio_bladder = self.t_bladder * 3 / self.inflatable_thickness
@@ -49,7 +49,7 @@ class StressRelated():
             self.data.layers__tensile_restraint * self.t_ratio_restraint + \
             self.data.layers__tensile_radiation * self.t_ratio_radiation
 
-        print(self.inflatable_tensile_strength)
+        #print(self.inflatable_tensile_strength)
 
     def calculate_stress(self):
 
@@ -58,8 +58,8 @@ class StressRelated():
         self.shear_stress = self.radial_stress / 4
 
         self.stress_safety = self.radial_stress * self.safety_factor
-        print("shear", self.shear_stress)
-        print(self.stress_safety)
+        #print("shear", self.shear_stress)
+        #print(self.stress_safety)
 
     def calculate_flooring_mass(self):
 
@@ -69,8 +69,9 @@ class StressRelated():
             self.data.layers__density_bladder * 0.002
 
         self.floor_mass = self.floor_width * self.data.habitat__length * 2 * self.floor_density
+        self.data.habitat__floor_mass = self.floor_mass
 
-        print("floor mass = ", self.floor_mass)
+        #print("floor mass = ", self.floor_mass)
 
     def calculate_inflatable_mass(self):
 
@@ -99,8 +100,8 @@ class StressRelated():
 
         self.data.habitat__inflatable_mass = self.total_mass
 
-        print("Inflatable mass:", self.inflatable_mass)
-        print("total mass = ", self.total_mass)
+        #print("Inflatable mass:", self.inflatable_mass)
+        #print("total mass = ", self.total_mass)
 
     def total_calc(self):
         self.calculate_inflatable_properties()
@@ -110,7 +111,7 @@ class StressRelated():
 
 
 Test = StressRelated()
-print(Test)
+#print(Test)
 
 # class UnitTest(unittest.TestCase):
 
