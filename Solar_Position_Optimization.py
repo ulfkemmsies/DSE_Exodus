@@ -59,6 +59,7 @@ class PVArrays():
 
         self.deployment_time_panels = 60 #s
         self.deployment_time_sunflower = 60 #s
+        self.box_dimensions = [3.5,2,0.5]
 
         self.runprogram('max',False)
         self.data.code_finisher()
@@ -157,7 +158,6 @@ class PVArrays():
 
         self.number_of_cells_parallel = self.total_number_of_cells/self.number_of_cells_series
         self.current_supply = self.number_of_cells_parallel*self.data.solar__cell_maxpower_current_bol/1000
-
         self.actual_number_of_cells = self.number_of_cells_parallel*self.number_of_cells_series
         self.actual_cell_width = self.number_of_cells_x*self.data.solar__cell_xdimension/1000
         self.actual_cell_height = self.number_of_cells_y*self.data.solar__cell_ydimension/1000
@@ -181,6 +181,9 @@ class PVArrays():
         self.total_length = self.internal_length+self.distance_habitat_solar*1000
         self.cable_weight = self.total_length * self.cable_density
         self.cable_volume = (25/2000)**2*np.pi*self.total_length
+        self.internal_cable_weight = (self.total_length-self.distance_habitat_solar*1000)*self.cable_density
+        self.habitatsolar_cable_weight = self.distance_habitat_solar*1000*self.cable_density
+        self.habitatsolar_cable_volune = self.distance_habitat_solar*1000*(25/2000)**2*np.pi
         #if self.residual != 0:
             ##print("ADD FINAL CABLE MANUALLY TO MASS AND VOLUME")
             
@@ -234,8 +237,8 @@ class PVArrays():
         self.solartower_total_mass = (self.solarflower_mass+self.panel_assembly_mass_total)*self.safety_factor_structures
         self.solartower_total_volume = (self.solarflower_volume+self.panel_assembly_volume_total)*self.safety_factor_structures
 
-        self.total_solarfarm_mass = self.solartower_total_mass*self.number_of_towers+self.cable_weight
-        self.total_solarfarm_volume = self.solartower_total_volume*self.number_of_towers
+        self.total_solarfarm_mass = self.solartower_total_mass*self.number_of_towers+self.internal_cable_weight
+        self.total_solarfarm_volume = self.box_dimensions[0]*self.box_dimensions[1]*self.box_dimensions[2]*self.number_of_towers
 
         #print("Total mass of single solar tower: ", self.solartower_total_mass, "kg")
         #print("Total volume of single solar tower: ", self.solartower_total_volume, "m3")
@@ -243,9 +246,12 @@ class PVArrays():
         self.data.solar__total_farm_mass = self.total_solarfarm_mass
         # print("Total volume of entire solar farm: ", self.total_solarfarm_volume, "m3") #ADD TO GUI
         self.data.solar__total_farm_volume = self.total_solarfarm_volume
+        print("Habitat-Solar Cable Weight: ", self.habitatsolar_cable_weight, "kg")
+        print("Habitat-Solar Cable Volume: ", self.habitatsolar_cable_volune, "kg")
+        print("ONLY THIS MASS AND VOLUME IS EXCLUDED IN THE TOTAL SOLAR FARM MASS AS IT'S PACKED SEPERATELY IN THE LV")
 
-        self.data.solar__total_mass = self.total_solarfarm_mass + self.cable_weight
-        self.data.solar__total_volume = self.total_solarfarm_volume + self.cable_volume
+        self.data.solar__total_mass = self.total_solarfarm_mass + self.habitatsolar_cable_weight
+        self.data.solar__total_volume = self.total_solarfarm_volume + self.habitatsolar_cable_volune
 
     def PVsetupenergy(self):
         self.number_of_trips = max(m.ceil((self.total_solarfarm_mass+self.cable_weight)/self.data.athlete__mass_capacity)/2,1)
