@@ -8,7 +8,7 @@ class Life_Support():
         
         self.data = CommonData()
         self.total_calc()
-        self.data.code_finisher()
+        # self.data.code_finisher()
 
     def water_calc(self):
         self.urine_and_flush_mass = 2.0
@@ -48,11 +48,11 @@ class Life_Support():
         self.data.gas_storage__total_gas_storage = self.gas_storage()
         self.total_ls_mass = self.data.total_mass__ls_mass_excluding_water_and_gas
         self.total_ls_mass += self.total_water_mass + self.total_ox+self.total_nitro
-        print(self.total_ls_mass)
+        #print(self.total_ls_mass)
         self.data.total_mass__total_ls_mass = self.total_ls_mass
         self.total_peak_power = 9627
         self.total_peak_power += self.data.power1__comms_peak_power
-        print(self.total_peak_power)
+        #print(self.total_peak_power)
         self.data.total_mass__total_ls_power = self.total_peak_power
 
 

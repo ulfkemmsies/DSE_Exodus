@@ -12,19 +12,19 @@ import matplotlib.pyplot as plt
 class orbit():
     def __init__(self):
         self.data = CommonData()
-        self.G = self.data.constants__gravitational_constant     #m3/(kgs2)
-        self.g0 = self.data.earth__gravity             #(m/s2)
-        self.R_earth = self.data.earth__radius                   #km
-        self.R_moon = self.data.moon__vol_mean_radius            #km
-        self.M_earth = self.data.earth__mass                     #kg
-        self.M_moon = self.data.moon__mass                  #kg
-        self.earth_day = self.data.earth__day*3600               #s
-        self.lunar_sid_period = self.data.moon__sidereal_period  #Earth days
-        self.lunar_perigee = self.data.moon__perigee              #km
-        self.lunar_apogee = self.data.moon__apogee                #km
-        self.lunar_orbit_per = self.data.moon__orbital_perimeter #km
-        self.LEO_height = self.data.launch_system__starship_leo_height #km
-        self.LLO_height = self.data.launch_system__llo_height #km
+        self.G = self.data.constants__gravitational_constant            #m3/(kgs2)
+        self.g0 = self.data.earth__gravity                              #(m/s2)
+        self.R_earth = self.data.earth__radius                          #km
+        self.R_moon = self.data.moon__vol_mean_radius                   #km
+        self.M_earth = self.data.earth__mass                            #kg
+        self.M_moon = self.data.moon__mass                              #kg
+        self.earth_day = self.data.earth__day*3600                      #s
+        self.lunar_sid_period = self.data.moon__sidereal_period         #Earth days
+        self.lunar_perigee = self.data.moon__perigee                    #km
+        self.lunar_apogee = self.data.moon__apogee                      #km
+        self.lunar_orbit_per = self.data.moon__orbital_perimeter        #km
+        self.LEO_height = self.data.launch_system__starship_leo_height  #km
+        self.LLO_height = self.data.launch_system__llo_height           #km
 
         self.mu_earth = self.G*self.M_earth
         self.mu_moon = self.G*self.M_moon
@@ -44,7 +44,7 @@ class orbit():
         self.superheavydry = self.data.launch_system__superheavy_dry_mass
         self.starshipfuel = self.data.launch_system__starship_prop_capacity
         self.superheavyfuel = self.data.launch_system__superheavy_prop_capacity
-        self.starship_PL = 43948
+        self.starship_PL = 57597
         self.methaneIsp = self.data.launch_system__ch4_specific_impulse_vac
         self.hydrogenIsp = self.data.launch_system__lh2lox_specific_impulse_vac
 
@@ -82,8 +82,8 @@ class orbit():
         self.deltaV_lunar_inclination = np.sqrt(2*self.aposelene_velocity**2*(1-np.cos(self.LLO_inclination)))
         self.deltaV_LLO_circulization = np.abs(self.periselene_velocity-self.LLO_velocity)
         self.deltaV_lunar_landing = self.LLO_velocity
-        self.total_deltaV = self.deltaV_earth_launch+self.deltaV_earth_exit+self.deltaV_lunar_entry+\
-            self.deltaV_lunar_inclination+self.deltaV_LLO_circulization+self.deltaV_lunar_landing
+        self.total_deltaV = 1.1*(self.deltaV_earth_launch+self.deltaV_earth_exit+self.deltaV_lunar_entry+\
+            self.deltaV_lunar_inclination+self.deltaV_LLO_circulization+self.deltaV_lunar_landing)
 
     def propellantmass(self, starship, ariane):
         if starship == True:
@@ -92,11 +92,10 @@ class orbit():
             self.Isp = self.methaneIsp
 
         else:
-            self.PL = 1440
+            self.PL = 1225
             self.dry = self.ariane_structural_coeff*self.PL
             self.Isp = self.hydrogenIsp
 
-        print(self.PL, self.dry)
         self.Epropmass_lunar_landing = m.exp(self.deltaV_lunar_landing/(self.g0*self.Isp))*\
             (self.dry+self.PL)-self.dry-self.PL
         self.Epropmass_LLO_circulization = m.exp(self.deltaV_LLO_circulization/(self.g0*self.Isp))*\
@@ -114,7 +113,8 @@ class orbit():
 
         self.totalpropmass_moon_journey = self.Epropmass_lunar_landing+self.Epropmass_LLO_circulization+self.Epropmass_LLO_inclination+\
             self.Epropmass_moon_entry+self.Epropmass_earth_exit
-        self.totalpropmass_moon_journey = self.totalpropmass_moon_journey*1.1
+        self.additionalfuel_moon_journey = self.totalpropmass_moon_journey*0.1
+        self.totalpropmass_moon_journey += self.additionalfuel_moon_journey
 
         self.Lpropmass_earth_entry = m.exp(self.deltaV_earth_exit/(self.g0*self.Isp))*\
                                      (self.dry+self.PL)-self.dry-self.PL
@@ -132,11 +132,11 @@ class orbit():
 
         self.totalpropmass_earth_journey = self.Lpropmass_earth_entry+self.Lpropmass_moon_exit+self.Lpropmass_LLO_inclination+\
             self.Lpropmass_lunarhohmann+self.Lpropmass_lunar_launch
+        self.additionalfuel_earth_journey = 0.1*self.totalpropmass_earth_journey
 
         return self.totalpropmass_earth_journey
 
     def transfertime(self):
-        self.propellantmass(True, False)
         self.LEO_period = 2*np.pi*np.sqrt((self.LEO_radius*1000)**3/self.mu_earth)/60
         self.LEO_revolutions = m.ceil(self.totalpropmass_moon_journey/self.data.launch_system__max_payload_mass)+1
         self.total_LEO_time = self.LEO_revolutions*self.LEO_period
@@ -189,8 +189,10 @@ class orbit():
               "\n-------------------------------------------------------------------------\n",
               "\n Total Mission DeltaV Budget: ", self.total_deltaV, "m/s",
               "\n Total Propellant Required (Refuel in LEO): ", self.totalpropmass_moon_journey, "kg",
-              "\n Total Transfer Time: ", self.total_transfer_time, "min or", self.total_transfer_time/(24*60), "days",
-              "\n Number of Refills Needed in LEO: ", self.LEO_revolutions-1)
+              "\n Additional Fuel for ContingencyL ", self.additionalfuel_moon_journey, "kg",
+              "\n Total Transfer Time: ", self.total_transfer_time, "min or", self.total_transfer_time/(24*60), "days")
+        if starship==True:
+            print("Number of Refills Needed in LEO: ", self.LEO_revolutions-1)
 
 Test = orbit()
 Test.program(False, True)

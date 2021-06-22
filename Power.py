@@ -31,7 +31,7 @@ class PowerRelated():
         self.p_outer_tank_radius = 1.2              # [m] Outer tank radius   
 
         self.total_calc()
-        self.data.code_finisher()
+        # self.data.code_finisher()
 
 #calculate the total mass and volume of h2 and o2 needed
     def calculate_hydrogen_energy(self):
@@ -39,12 +39,12 @@ class PowerRelated():
         self.energy_needed = self.p_req_days * self.p_day_sec * self.p_power_required * self.p_eff_fuel_cell * self.p_safety_factor
         self.h2_mass_en = self.energy_needed / self.p_h2_specific_energy
         self.h2_mass = self.energy_needed / self.p_h2_specific_energy + self.p_h2_life_support
-        self.o2_mass = self.h2_mass * self.p_h2_o2_ratio + self.p_o2_life_support
+        self.o2_mass = self.h2_mass_en * self.p_h2_o2_ratio + self.p_o2_life_support
         self.h2_volume = self.h2_mass / self.p_liquid_h2_density
         self.o2_volume = self.o2_mass / self.p_liquid_o2_density
 
-        print("h2 mass", self.h2_mass, "h2 volume", self.h2_volume)
-        print("o2 mass", self.o2_mass, "o2 volume", self.o2_volume)
+        #print("h2 mass", self.h2_mass, "h2 volume", self.h2_volume)
+        #print("o2 mass", self.o2_mass, "o2 volume", self.o2_volume)
 
         self.data.power_storage__h2_mass  = np.round(self.h2_mass,2)
         self.data.power_storage__o2_mass  = np.round(self.o2_mass,2)
@@ -54,8 +54,8 @@ class PowerRelated():
         self.h2_tank_mass = (self.h2_mass * self.p_h2_tank_ref_mass)/ self.p_h2_tank_ref_propellant_mass
         self.o2_tank_mass = (self.o2_mass * self.p_o2_tank_ref_mass)/ self.p_o2_tank_ref_propellant_mass
 
-        print("h2 tank mass", self.h2_tank_mass)
-        print("o2 tank mass", self.o2_tank_mass)
+        #print("h2 tank mass", self.h2_tank_mass)
+        #print("o2 tank mass", self.o2_tank_mass)
 
         self.data.power_storage__h2_tank_mass  = np.round(self.h2_tank_mass,2)
         self.data.power_storage__o2_tank_mass  = np.round(self.o2_tank_mass,2)
@@ -69,11 +69,11 @@ class PowerRelated():
         self.h2_tank_volume_total = 3.1415 * self.p_outer_tank_radius**2 * self.h2_tank_height
         self.o2_tank_volume_total = 3.1415 * self.p_outer_tank_radius**2 * self.o2_tank_height
         
-        print("h2 tank height", self.h2_tank_height)
-        print("o2 tank height", self.o2_tank_height)
-        print("tank radius", self.p_outer_tank_radius)
-        print("h2 tank total tank volume", self.h2_tank_volume_total)    
-        print("o2 tank total tank volume", self.o2_tank_volume_total)    
+        #print("h2 tank height", self.h2_tank_height)
+        #print("o2 tank height", self.o2_tank_height)
+        #print("tank radius", self.p_outer_tank_radius)
+        #print("h2 tank total tank volume", self.h2_tank_volume_total)    
+        #print("o2 tank total tank volume", self.o2_tank_volume_total)    
 
         self.data.power_storage__h2_tank_volume  = np.round(self.h2_tank_volume_total,2)
         self.data.power_storage__o2_tank_volume  = np.round(self.o2_tank_volume_total,2)
