@@ -148,7 +148,7 @@ materials,layers,density_restraint,980.0,kg/m^3
 materials,layers,density_radiation,922.0,kg/m^3
 materials,layers,density_lining,1380.0,kg/m^3
 general,moon,incident_temp_day,313.0,K
-general,moon,incident_temp_night,233.0,K
+general,moon,incident_temp_night,213.0,K
 general,moon,subsurface_temp,250.0,K
 general,habitat,inside_temp,294.0,K
 general,moon,shadow_temp_day,290.0,K
