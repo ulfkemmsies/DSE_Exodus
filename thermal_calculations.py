@@ -73,7 +73,7 @@ class ThermalControl():
             self.underground_conductivity * self.area_underground * self.dT_underground
 
         #print("Heat flow underground = ", self.heat_flow_underground)
-        #print("Heat flow at night = ", self.heat_flow_night)
+        print("Heat flow at night = ", self.heat_flow_night)
 
     def calculate_heat_flow_day(self):
 
@@ -81,7 +81,7 @@ class ThermalControl():
             self.exposed_conductivity * self.area_shadow * self.dT_day_shadow + \
             self.underground_conductivity * self.area_underground * self.dT_underground
 
-        #print("Heat flow at day = ", self.heat_flow_day)
+        print("Heat flow at day = ", self.heat_flow_day)
 
     def calculate_body_heat(self):
 
@@ -96,16 +96,16 @@ class ThermalControl():
         self.internal_heat_day = self.equipment_heat_day + self.astronaut_body_heat * 4
         self.internal_heat_night = self.equipment_heat_night + self.astronaut_body_heat * 4
 
-        #print("Internal heat day = ", self.internal_heat_day)
-        #print("Internal heat night = ", self.internal_heat_night)
+        print("Internal heat day = ", self.internal_heat_day)
+        print("Internal heat night = ", self.internal_heat_night)
 
     def calculate_total_heat(self):
 
         self.total_heat_day = self.internal_heat_day + self.heat_flow_day + 4 * self.astronaut_body_heat
         self.total_heat_night = self.internal_heat_night + self.heat_flow_night + 4 * self.astronaut_body_heat
 
-        #print("total heat day = ", self.total_heat_day)
-        #print("total heat night = ", self.total_heat_night)
+        print("total heat day = ", self.total_heat_day)
+        print("total heat night = ", self.total_heat_night)
 
     def calculate_thermal_power(self):
 
